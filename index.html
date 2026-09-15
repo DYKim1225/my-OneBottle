@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#0a0c10">
+  <title>원바틀 (One Bottle)</title>
+  <style>
+    :root {
+      --bg: #0a0c10;
+      --card-bg: #141820;
+      --border: #222938;
+      --soju: #10b981;
+      --wine: #e11d48;
+      --beer: #f59e0b;
+      --text: #f3f4f6;
+      --muted: #6b7280;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding: env(safe-area-inset-top) 16px env(safe-area-inset-bottom) 16px;
+      touch-action: manipulation;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .header-title h1 { font-size: 1.1rem; font-weight: 700; }
+    .header-title p { font-size: 0.75rem; color: var(--muted); }
+    .header-actions { display: flex; gap: 8px; }
+    .icon-btn {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: 8px;
+      padding: 6px 10px;
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+
+    /* 막잔 앰버 알림 */
+    #amber-banner {
+      display: none;
+      background: rgba(245, 158, 11, 0.15);
+      border: 1px solid var(--warning);
+      color: #fbbf24;
+      border-radius: 8px;
+      padding: 10px;
+      margin-top: 12px;
+      font-size: 0.8rem;
+      text-align: center;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
+
+    /* 보틀 인디케이터 */
+    .bottle-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 16px 0;
+    }
+    .bottle-wrapper {
+      position: relative;
+      width: 70px;
+      height: 170px;
+    }
+    .bottle-svg { width: 100%; height: 100%; }
+    .liquid-fill {
+      transition: height 0.4s ease-in-out, y 0.4s ease-in-out;
+    }
+    .stat-text {
+      margin-top: 10px;
+      text-align: center;
+    }
+    .stat-text .percentage {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--soju);
+    }
+    .stat-text .detail {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    /* 탭 바 */
+    .tabs {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+    }
+    .tab-btn {
+      flex: 1;
+      padding: 8px 12px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--muted);
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+    .tab-btn.active {
+      border-color: var(--soju);
+      color: var(--text);
+      font-weight: bold;
+    }
+
+    /* 잔 그리드 */
+    .glass-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin: 16px 0;
+    }
+    .glass-card {
+      aspect-ratio: 1;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      cursor: pointer;
+      transition: transform 0.1s, border-color 0.2s;
+    }
+    .glass-card:active { transform: scale(0.95); }
+    .glass-card.filled {
+      border-color: var(--soju);
+      background: rgba(16, 185, 129, 0.1);
+    }
+    .glass-card .glass-icon { font-size: 1.5rem; opacity: 0.3; }
+    .glass-card.filled .glass-icon { opacity: 1; filter: drop-shadow(0 0 6px var(--soju)); }
+    .glass-card .glass-num { font-size: 0.7rem; color: var(--muted); }
+
+    /* 물 트래커 */
+    .water-bar {
+      margin-top: auto;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .water-btn {
+      background: #0284c7;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    /* 모달 베이스 */
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(4px);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .modal-content {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      width: 100%;
+      max-width: 360px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* 온보딩 설정 모달 */
+    .config-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .stepper {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .stepper button {
+      width: 28px;
+      height: 28px;
+      background: var(--border);
+      color: var(--text);
+      border: none;
+      border-radius: 6px;
+    }
+    .btn-primary {
+      background: var(--soju);
+      color: #000;
+      font-weight: 700;
+      border: none;
+      border-radius: 8px;
+      padding: 12px;
+      cursor: pointer;
+    }
+
+    /* 거울치료 모달 */
+    #mirror-modal .modal-content {
+      border-color: var(--danger);
+      text-align: center;
+    }
+    .mirror-circle {
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      margin: 0 auto;
+      overflow: hidden;
+      border: 3px solid var(--danger);
+      box-shadow: 0 0 20px rgba(239, 68, 68, 0.6);
+      position: relative;
+    }
+    #camera-feed {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transform: scaleX(-1);
+    }
+    .danger-title {
+      color: var(--danger);
+      font-size: 1.1rem;
+      font-weight: 800;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-title">
+      <h1>오늘의 1차</h1>
+      <p id="current-date">2026. 09. 15</p>
+    </div>
+    <div class="header-actions">
+      <button class="icon-btn" onclick="openConfigModal()">⚙️ 설정</button>
+      <button class="icon-btn" onclick="resetTodaySession()">🔄 리셋</button>
+    </div>
+  </header>
+
+  <div id="amber-banner">⚠️ 이번 차수 마지막 잔입니다! 물을 마시며 1차를 마무리하세요.</div>
+
+  <!-- 보틀 인디케이터 (초록색 소주병 SVG 탑재) -->
+  <section class="bottle-section">
+    <div class="bottle-wrapper">
+      <svg class="bottle-svg" viewBox="0 0 100 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <clipPath id="soju-bottle-clip">
+            <!-- 소주병 실루엣: 캡, 병목, 둥근 어깨, 하단 몸체 -->
+            <path d="M42 5 H58 V22 H42 Z M40 22 H60 V48 Q60 62 76 72 Q82 76 82 86 V224 Q82 232 72 232 H28 Q18 232 18 224 V86 Q18 76 24 72 Q40 62 40 48 Z" />
+          </clipPath>
+        </defs>
+
+        <!-- 병 내부 액체 (클립패스 적용) -->
+        <g clip-path="url(#soju-bottle-clip)">
+          <rect width="100" height="240" fill="#08281a" />
+          <!-- 실시간 차오르는 소주 에메랄드 그린 액체 -->
+          <rect id="liquid" x="0" y="240" width="100" height="240" fill="var(--soju)" class="liquid-fill" />
+        </g>
+
+        <!-- 투명 소주병 외곽선 및 반사광 -->
+        <path d="M42 5 H58 V22 H42 Z M40 22 H60 V48 Q60 62 76 72 Q82 76 82 86 V224 Q82 232 72 232 H28 Q18 232 18 224 V86 Q18 76 24 72 Q40 62 40 48 Z" 
+              stroke="#2ed573" stroke-width="3" stroke-opacity="0.6" fill="none" />
+        <!-- 은색 병뚜껑 -->
+        <rect x="42" y="5" width="16" height="17" rx="2" fill="#94a3b8" />
+        <!-- 소주 흰색 라벨 (아이덴티티) -->
+        <rect x="25" y="115" width="50" height="60" rx="3" fill="#ffffff" fill-opacity="0.9" />
+        <text x="50" y="145" fill="#064e3b" font-size="10" font-weight="900" text-anchor="middle">원바틀</text>
+        <text x="50" y="160" fill="#047857" font-size="6" font-weight="600" text-anchor="middle">SOJU 16.5°</text>
+      </svg>
+    </div>
+    <div class="stat-text">
+      <div class="percentage" id="total-percent">0%</div>
+      <div class="detail" id="quota-desc">통합 주량 한계선: 0 / 8 잔</div>
+    </div>
+  </section>
+
+  <!-- 주종 탭 바 -->
+  <div class="tabs" id="tab-bar"></div>
+
+  <!-- 잔 선택 그리드 -->
+  <div class="glass-grid" id="glass-grid"></div>
+
+  <!-- 물 마시기 트래커 -->
+  <div class="water-bar">
+    <div>
+      <div style="font-weight:600; font-size:0.9rem;">💧 숙취 방어 물 섭취</div>
+      <div style="color:var(--muted); font-size:0.75rem;">술 1잔당 물 1잔 권장</div>
+    </div>
+    <button class="water-btn" onclick="addWater()">물 마심 (<span id="water-count">0</span>)</button>
+  </div>
+
+  <!-- 온보딩 및 주량 설정 모달 -->
+  <div class="modal" id="config-modal">
+    <div class="modal-content">
+      <h2 style="font-size:1.1rem;">1차 주량 설정</h2>
+      <p style="font-size:0.8rem; color:var(--muted);">1차에서 마실 주종과 한계 주량을 정하세요.</p>
+      <div id="config-list"></div>
+      <button class="btn-primary" onclick="saveConfig()">설정 저장 및 락</button>
+    </div>
+  </div>
+
+  <!-- 거울치료 모달 (WebRTC) -->
+  <div class="modal" id="mirror-modal">
+    <div class="modal-content">
+      <div class="danger-title">⚠️ 주량 초과: 즉시 귀가 권고</div>
+      <div class="mirror-circle">
+        <video id="camera-feed" autoplay playsinline muted></video>
+      </div>
+      <p style="font-size:0.85rem; line-height:1.4;">
+        지금 당신의 풀린 눈빛과 붉어진 얼굴을 똑바로 보세요.<br>
+        <strong>지금 멈추면 내일이 편안합니다.</strong>
+      </p>
+      <button class="btn-primary" style="background:var(--danger); color:#fff;" onclick="closeMirror()">거울 닫고 절주하기</button>
+    </div>
+  </div>
+
+  <script>
+    const DEFAULT_CONFIG = {
+      isLocked: false,
+      targets: {
+        soju: { name: '소주', totalGlasses: 8, icon: '🍶', color: '#10b981' },
+        wine: { name: '와인', totalGlasses: 5, icon: '🍷', color: '#e11d48' },
+        beer: { name: '맥주', totalGlasses: 3, icon: '🍺', color: '#f59e0b' }
+      }
+    };
+
+    let config = JSON.parse(localStorage.getItem('oneBottleConfig')) || DEFAULT_CONFIG;
+    let session = JSON.parse(localStorage.getItem('oneBottleSession')) || {
+      activeTab: 'soju',
+      records: { soju: 0, wine: 0, beer: 0 },
+      waterCount: 0,
+      timestamp: Date.now()
+    };
+
+    let cameraStream = null;
+
+    function init() {
+      // 6시간 이상 경과 시 세션 자동 리셋
+      if (Date.now() - session.timestamp > 6 * 60 * 60 * 1000) {
+        resetTodaySession(false);
+      }
+      if (!config.isLocked) {
+        openConfigModal();
+      }
+      renderTabs();
+      renderGrid();
+      updateDashboard();
+    }
+
+    // 통합 주량 퍼센티지 계산 (혼합 음주 로직)
+    function calcTotalProgress() {
+      let totalFraction = 0;
+      for (const [key, target] of Object.entries(config.targets)) {
+        const consumed = session.records[key] || 0;
+        totalFraction += consumed / target.totalGlasses;
+      }
+      return totalFraction;
+    }
+
+    function updateDashboard() {
+      const progress = calcTotalProgress();
+      const percent = Math.round(progress * 100);
+      
+      // 보틀 SVG 액체 수위 조절 (높이 240px 기준)
+      const liquid = document.getElementById('liquid');
+      const fillHeight = Math.min(progress, 1.0) * 200; // 최대 바디 높이 매핑
+      liquid.setAttribute('y', 232 - fillHeight);
+      liquid.setAttribute('height', fillHeight);
+
+      // 텍스트 수치
+      const percentEl = document.getElementById('total-percent');
+      percentEl.innerText = `${percent}%`;
+      percentEl.style.color = percent >= 100 ? 'var(--danger)' : 'var(--soju)';
+
+      const activeName = config.targets[session.activeTab].name;
+      const consumedActive = session.records[session.activeTab] || 0;
+      const totalActive = config.targets[session.activeTab].totalGlasses;
+      document.getElementById('quota-desc').innerText = 
+        `통합 소진율 ${percent}% (${activeName} 기준 ${consumedActive}/${totalActive}잔)`;
+
+      // D-1 막잔 알림 (정확히 1잔 남았을 때)
+      const amber = document.getElementById('amber-banner');
+      const activeRemain = totalActive - consumedActive;
+      if (progress < 1.0 && (activeRemain === 1 || percent >= 85)) {
+        amber.style.display = 'block';
+      } else {
+        amber.style.display = 'none';
+      }
+
+      document.getElementById('water-count').innerText = session.waterCount;
+      localStorage.setItem('oneBottleSession', JSON.stringify(session));
+    }
+
+    function renderTabs() {
+      const container = document.getElementById('tab-bar');
+      container.innerHTML = '';
+      for (const [key, item] of Object.entries(config.targets)) {
+        const btn = document.createElement('button');
+        btn.className = `tab-btn ${session.activeTab === key ? 'active' : ''}`;
+        btn.innerHTML = `${item.icon} ${item.name}`;
+        btn.onclick = () => {
+          session.activeTab = key;
+          renderTabs();
+          renderGrid();
+          updateDashboard();
+        };
+        container.appendChild(btn);
+      }
+    }
+
+    function renderGrid() {
+      const grid = document.getElementById('glass-grid');
+      grid.innerHTML = '';
+      const total = config.targets[session.activeTab].totalGlasses;
+      const consumed = session.records[session.activeTab] || 0;
+
+      for (let i = 1; i <= total; i++) {
+        const card = document.createElement('div');
+        const isFilled = i <= consumed;
+        card.className = `glass-card ${isFilled ? 'filled' : ''}`;
+        card.innerHTML = `
+          <div class="glass-icon">${config.targets[session.activeTab].icon}</div>
+          <div class="glass-num">${i}잔</div>
+        `;
+        card.onclick = () => toggleGlass(i);
+        grid.appendChild(card);
+      }
+    }
+
+    function toggleGlass(index) {
+      const current = session.records[session.activeTab] || 0;
+      if (index === current) {
+        // 이미 마신 마지막 잔 탭 시 취소(-1)
+        session.records[session.activeTab]--;
+      } else {
+        // 잔 추가 시 주량 초과 여부 확인
+        const projectedProgress = calcTotalProgress() + (1 / config.targets[session.activeTab].totalGlasses);
+        session.records[session.activeTab] = index;
+        if (projectedProgress > 1.05) {
+          triggerRealityCheck();
+        }
+      }
+      renderGrid();
+      updateDashboard();
+    }
+
+    function addWater() {
+      session.waterCount++;
+      updateDashboard();
+    }
+
+    // 전면 카메라 거울치료
+    async function triggerRealityCheck() {
+      const modal = document.getElementById('mirror-modal');
+      const video = document.getElementById('camera-feed');
+      modal.style.display = 'flex';
+
+      try {
+        cameraStream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: 'user' }
+        });
+        video.srcObject = cameraStream;
+      } catch (err) {
+        console.warn('카메라 접근 거부 또는 불가:', err);
+      }
+    }
+
+    function closeMirror() {
+      const modal = document.getElementById('mirror-modal');
+      modal.style.display = 'none';
+      if (cameraStream) {
+        cameraStream.getTracks().forEach(track => track.stop());
+        cameraStream = null;
+      }
+    }
+
+    // 설정 모달
+    function openConfigModal() {
+      const list = document.getElementById('config-list');
+      list.innerHTML = '';
+      for (const [key, item] of Object.entries(config.targets)) {
+        const row = document.createElement('div');
+        row.className = 'config-row';
+        row.innerHTML = `
+          <span>${item.icon} ${item.name} 한계 잔 수</span>
+          <div class="stepper">
+            <button onclick="adjustTarget('${key}', -1)">-</button>
+            <span id="target-${key}">${item.totalGlasses}</span>
+            <button onclick="adjustTarget('${key}', 1)">+</button>
+          </div>
+        `;
+        list.appendChild(row);
+      }
+      document.getElementById('config-modal').style.display = 'flex';
+    }
+
+    function adjustTarget(key, delta) {
+      const val = config.targets[key].totalGlasses + delta;
+      if (val >= 1 && val <= 20) {
+        config.targets[key].totalGlasses = val;
+        document.getElementById(`target-${key}`).innerText = val;
+      }
+    }
+
+    function saveConfig() {
+      config.isLocked = true;
+      localStorage.setItem('oneBottleConfig', JSON.stringify(config));
+      document.getElementById('config-modal').style.display = 'none';
+      renderGrid();
+      updateDashboard();
+    }
+
+    function resetTodaySession(confirmReq = true) {
+      if (!confirmReq || confirm('오늘의 음주 기록을 초기화하시겠습니까?')) {
+        session.records = { soju: 0, wine: 0, beer: 0 };
+        session.waterCount = 0;
+        session.timestamp = Date.now();
+        localStorage.setItem('oneBottleSession', JSON.stringify(session));
+        renderGrid();
+        updateDashboard();
+      }
+    }
+
+    init();
+  </script>
+</body>
+</html>
