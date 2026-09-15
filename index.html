@@ -319,7 +319,7 @@
     @keyframes dangerPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.55; } }
     .glass-tile.tile-extra .tile-label { color: var(--danger); font-weight: 700; }
 
-    /* H2O 플로팅 버튼 */
+    /* 우측 하단 생명수(H2O) 플로팅 버튼 */
     .h2o-floater {
       position: fixed;
       right: 18px;
@@ -338,7 +338,7 @@
       transition: transform 0.15s ease;
     }
     .h2o-floater:active { transform: scale(0.92); }
-    .h2o-label { font-size: 0.85rem; font-weight: 700; color: #ffffff; letter-spacing: 0.02em; }
+    .h2o-label { font-size: 0.85rem; font-weight: 700; color: #ffffff; letter-spacing: -0.01em; }
     .h2o-badge {
       background: rgba(255, 255, 255, 0.95);
       color: #0369a1;
@@ -522,10 +522,10 @@
   <!-- 하단 음용 잔 그리드 -->
   <div class="glasses-grid" id="glasses-grid"></div>
 
-  <!-- H2O 플로팅 버튼 -->
+  <!-- 우측 하단 생명수(H2O) 플로팅 버튼 -->
   <div class="h2o-floater" onclick="drinkWater()">
     <span style="font-size:1.05rem;">💧</span>
-    <span class="h2o-label">H₂O</span>
+    <span class="h2o-label">생명수</span>
     <span class="h2o-badge" id="h2o-badge">0</span>
   </div>
 
@@ -558,7 +558,7 @@
 
   <script>
     /* ==========================================================================
-       I. 상단 쇼케이스 SVG (위스키 375ml 반병 라벨 지원)
+       I. 상단 쇼케이스 SVG (유통 및 서빙 규격)
        ========================================================================== */
 
     function getSojuBottleSvg(uniqueId, fillPercent) {
@@ -656,7 +656,6 @@
       </svg>`;
     }
 
-    // 위스키: 375ml(반병) 라벨 연동 디캔터 보틀
     function getWhiskeyBottleSvg(uniqueId, fillPercent, targetGlasses = 12, targetVol = 375) {
       const fillHeight = Math.min(Math.max(fillPercent, 0), 1.0) * 120;
       const yPos = 160 - fillHeight;
@@ -707,6 +706,7 @@
       </svg>`;
     }
 
+    /*
     function getEtcBottleSvg(uniqueId, fillPercent) {
       const fillHeight = Math.min(Math.max(fillPercent, 0), 1.0) * 135;
       const yPos = 160 - fillHeight;
@@ -727,6 +727,7 @@
         <text x="37" y="105" fill="#22d3ee" font-size="8" font-weight="900" text-anchor="middle">HIGHBALL</text>
       </svg>`;
     }
+    */
 
     function renderUpperShowcaseSvg(type, uniqueId, fillPercent, targetObj) {
       switch(type) {
@@ -738,7 +739,8 @@
           const gls = targetObj ? targetObj.totalGlasses : 12;
           return getWhiskeyBottleSvg(uniqueId, fillPercent, gls, vol);
         case 'makgeolli': return getMakgeolliBottleSvg(uniqueId, fillPercent);
-        default: return getEtcBottleSvg(uniqueId, fillPercent);
+        /* default: return getEtcBottleSvg(uniqueId, fillPercent); */
+        default: return getSojuBottleSvg(uniqueId, fillPercent);
       }
     }
 
@@ -823,6 +825,7 @@
       </svg>`;
     }
 
+    /*
     function getEtcGlassSvg(isFilled) {
       const col = isFilled ? "#06b6d4" : "rgba(255,255,255,0.4)";
       const fillOp = isFilled ? "0.9" : "0";
@@ -833,6 +836,7 @@
         <line x1="19" y1="3" x2="23" y2="28" stroke="#f43f5e" stroke-width="1.2"/>
       </svg>`;
     }
+    */
 
     function getLowerGlassSvg(type, isFilled) {
       switch(type) {
@@ -841,12 +845,13 @@
         case 'wine': return getWineGlassSvg(isFilled);
         case 'whiskey': return getWhiskeyGlassSvg(isFilled);
         case 'makgeolli': return getMakgeolliBowlSvg(isFilled);
-        default: return getEtcGlassSvg(isFilled);
+        /* case 'etc': return getEtcGlassSvg(isFilled); */
+        default: return getSojuGlassSvg(isFilled);
       }
     }
 
     /* ==========================================================================
-       III. 주종 카탈로그 (위스키 375ml 반병 기본화)
+       III. 주종 카탈로그 (하이볼 주석 처리 & 소주 단독 기본값)
        ========================================================================== */
     const SOJU_MINI_ICON = `
       <svg viewBox="0 0 16 32" style="width:13px; height:26px; vertical-align:middle;">
@@ -880,7 +885,7 @@
       wine: { 
         name: '와인', 
         iconHtml: '🍷', 
-        ratio: 6, // 1병 = 6잔
+        ratio: 6, 
         unit: '병', 
         glass: '잔', 
         standardBottleVol: '750ml',
@@ -890,7 +895,7 @@
       whiskey: { 
         name: '위스키', 
         iconHtml: '🥃', 
-        ratio: 24, // 1병(750ml) = 24잔, 반병(375ml) = 12잔 (잔당 31.25ml)
+        ratio: 24, 
         unit: '병', 
         glass: '잔', 
         standardBottleVol: '375ml (반병)',
@@ -900,13 +905,15 @@
       makgeolli: { 
         name: '막걸리', 
         iconHtml: '🍶', 
-        ratio: 4, // 1병 = 4사발
+        ratio: 4, 
         unit: '병', 
         glass: '사발', 
         standardBottleVol: '750ml',
         accent: '#94a3b8', 
         glow: 'rgba(148, 163, 184, 0.3)' 
-      },
+      }
+      /* 
+      // 하이볼 추후 복구용 주석
       etc: { 
         name: '하이볼', 
         iconHtml: '🍹', 
@@ -917,23 +924,24 @@
         accent: '#06b6d4', 
         glow: 'rgba(6, 182, 212, 0.35)' 
       }
+      */
     };
 
-    // v6 스키마: 위스키 기본값 0.5병(375ml / 12잔)
-    let appConfig = JSON.parse(localStorage.getItem('obConfig_v6')) || {
+    // v7 스키마: 소주 1병 기본 단독 체크
+    let appConfig = JSON.parse(localStorage.getItem('obConfig_v7')) || {
       isSet: false,
-      activeKeys: ['soju', 'whiskey'],
+      activeKeys: ['soju'], // 소주만 기본 선택
       targets: {
         soju: { mode: 'bottle', count: 1, totalGlasses: 8 },
         beer: { mode: 'glass', count: 2, totalGlasses: 2 },
         wine: { mode: 'bottle', count: 1, totalGlasses: 6 },
-        whiskey: { mode: 'bottle', count: 0.5, totalGlasses: 12 }, // 반병 375ml = 12잔
-        makgeolli: { mode: 'bottle', count: 1, totalGlasses: 4 },
-        etc: { mode: 'glass', count: 2, totalGlasses: 2 }
+        whiskey: { mode: 'bottle', count: 0.5, totalGlasses: 12 },
+        makgeolli: { mode: 'bottle', count: 1, totalGlasses: 4 }
+        /* etc: { mode: 'glass', count: 2, totalGlasses: 2 } */
       }
     };
 
-    let appSession = JSON.parse(localStorage.getItem('obSession_v6')) || {
+    let appSession = JSON.parse(localStorage.getItem('obSession_v7')) || {
       currentTab: 'soju',
       glassStates: {},
       extraCount: {},
@@ -1029,7 +1037,7 @@
       }
 
       document.getElementById('h2o-badge').innerText = appSession.water;
-      localStorage.setItem('obSession_v6', JSON.stringify(appSession));
+      localStorage.setItem('obSession_v7', JSON.stringify(appSession));
     }
 
     function renderShowcaseRack(key, target, totalConsumed) {
@@ -1039,14 +1047,12 @@
       const meta = BEV_CATALOG[key];
 
       if (key === 'whiskey') {
-        // 위스키: 목표 설정 용량(예: 375ml)에 도달하면 완충되는 디캔터 보틀 1개 렌더링
         const unit = document.createElement('div');
         unit.className = 'bottle-unit';
         const fillFraction = totalConsumed / target.totalGlasses;
         unit.innerHTML = renderUpperShowcaseSvg('whiskey', 'whiskey-main', fillFraction, target);
         rack.appendChild(unit);
       } else if (key === 'beer') {
-        // 맥주: 500ml 조끼잔 N개 렌더링
         const numMugs = target.count;
         for (let i = 0; i < numMugs; i++) {
           let mugFill = 0;
@@ -1063,7 +1069,6 @@
           rack.appendChild(unit);
         }
       } else {
-        // 소주, 와인, 막걸리: 병 단위 렌더링
         const numBottles = target.mode === 'bottle' ? target.count : Math.max(1, Math.ceil(target.totalGlasses / meta.ratio));
         const glassesPerBottle = meta.ratio;
 
@@ -1134,7 +1139,6 @@
         grid.appendChild(tile);
       }
 
-      // 초과 잔 [+]
       const consumed = getCheckedCount(key);
       const extra = appSession.extraCount[key] || 0;
       if (consumed >= limit) {
@@ -1202,7 +1206,7 @@
       }
     }
 
-    /* 설정 모달 (위스키 0.5병/375ml 지원) */
+    /* 설정 모달 (소주 1병 기본 선택 & 5개 주종 콤팩트 렌더링) */
     function openSettings() {
       const container = document.getElementById('settings-card-list');
       container.innerHTML = '';
@@ -1229,7 +1233,7 @@
                 <button class="unit-opt ${tgt.mode === 'bottle' ? 'on' : ''}" onclick="changeUnit('${key}', 'bottle')">${key === 'whiskey' ? '병(375ml~)' : meta.unit}</button>
                 <button class="unit-opt ${tgt.mode === 'glass' ? 'on' : ''}" onclick="changeUnit('${key}', 'glass')">${meta.glass}</button>
               </div>
-            ` : `<span style="font-size:0.75rem; color:var(--text-dim); font-weight:600;">${key === 'beer' ? '500ml 기준' : '잔 기준'}</span>`}
+            ` : `<span style="font-size:0.75rem; color:var(--text-dim); font-weight:600;">500ml 기준</span>`}
           </div>
 
           <div class="card-bottomline">
@@ -1279,7 +1283,6 @@
       const tgt = appConfig.targets[key];
 
       if (key === 'whiskey' && tgt.mode === 'bottle') {
-        // 위스키 병 모드: 0.5병(375ml) 단위 증감
         let cur = tgt.count + (delta * 0.5);
         if (cur < 0.5 || cur > 4.0) return;
         tgt.count = parseFloat(cur.toFixed(1));
@@ -1303,7 +1306,7 @@
           `총 ${tgt.count}잔 (${tgt.count * 500}ml)`;
       } else if (key === 'whiskey') {
         if (tgt.mode === 'bottle') {
-          tgt.totalGlasses = Math.round(tgt.count * 24); // 0.5병 = 12잔, 1.0병 = 24잔
+          tgt.totalGlasses = Math.round(tgt.count * 24);
           const vol = Math.round(tgt.count * 750);
           const label = tgt.count === 0.5 ? '반병 (375ml)' : `${tgt.count}병 (${vol}ml)`;
           document.getElementById(`formula-${key}`).innerText = 
@@ -1333,7 +1336,7 @@
         return;
       }
       appConfig.isSet = true;
-      localStorage.setItem('obConfig_v6', JSON.stringify(appConfig));
+      localStorage.setItem('obConfig_v7', JSON.stringify(appConfig));
       document.getElementById('settings-modal').style.display = 'none';
 
       if (!appConfig.activeKeys.includes(appSession.currentTab)) {
@@ -1350,7 +1353,7 @@
         appSession.extraCount = {};
         appSession.water = 0;
         appSession.timeMark = Date.now();
-        localStorage.setItem('obSession_v6', JSON.stringify(appSession));
+        localStorage.setItem('obSession_v7', JSON.stringify(appSession));
         renderGlassGrid();
         updateMainInterface();
       }
