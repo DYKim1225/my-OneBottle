@@ -6,92 +6,87 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="원바틀">
-  <meta name="theme-color" content="#0a0c10">
+  <meta name="theme-color" content="#07090d">
   <title>원바틀 (One Bottle)</title>
 
-  <!-- iOS 홈 화면 고해상도 앱 아이콘(술병 & 고급 글래스 그래픽) 동적 생성 -->
+  <!-- iOS 홈 화면 고해상도 앱 아이콘 동적 생성 -->
   <script>
-    (function generateAppIcon() {
+    (function initAppIcon() {
       const canvas = document.createElement('canvas');
       canvas.width = 180;
       canvas.height = 180;
       const ctx = canvas.getContext('2d');
 
-      // 다크 라운지 배경
-      const grad = ctx.createLinearGradient(0, 0, 180, 180);
-      grad.addColorStop(0, '#0a0c10');
-      grad.addColorStop(1, '#161d27');
-      ctx.fillStyle = grad;
+      const bg = ctx.createRadialGradient(90, 90, 10, 90, 90, 110);
+      bg.addColorStop(0, '#131b26');
+      bg.addColorStop(1, '#07090e');
+      ctx.fillStyle = bg;
       ctx.fillRect(0, 0, 180, 180);
 
-      // 외곽 미세 네온 링
-      ctx.strokeStyle = '#10b981';
-      ctx.lineWidth = 4;
+      ctx.strokeStyle = 'rgba(16, 185, 129, 0.45)';
+      ctx.lineWidth = 3;
       ctx.strokeRect(6, 6, 168, 168);
 
-      // 초록 소주병 실루엣
+      // 참이슬형 초록 소주병
+      ctx.fillStyle = '#1b5e20';
+      ctx.fillRect(52, 38, 16, 14); // 캡
       ctx.fillStyle = '#10b981';
-      ctx.fillRect(52, 50, 18, 16); // 넥
       ctx.beginPath();
-      ctx.roundRect(43, 66, 36, 75, [8, 8, 4, 4]); // 보디
-      ctx.fill();
-      // 은색 캡 & 라벨
-      ctx.fillStyle = '#cbd5e1';
-      ctx.fillRect(54, 42, 14, 9);
-      ctx.fillStyle = '#ffffff';
-      ctx.fillRect(49, 90, 24, 30);
-
-      // 고급 칵테일/와인 글래스 실루엣
-      ctx.strokeStyle = '#e11d48';
-      ctx.lineWidth = 3;
-      ctx.beginPath();
-      ctx.moveTo(95, 65);
-      ctx.lineTo(135, 65);
-      ctx.lineTo(115, 102);
+      ctx.moveTo(52, 52);
+      ctx.lineTo(68, 52);
+      ctx.lineTo(76, 75);
+      ctx.lineTo(76, 142);
+      ctx.lineTo(44, 142);
+      ctx.lineTo(44, 75);
       ctx.closePath();
-      ctx.stroke();
-      ctx.fillStyle = 'rgba(225, 29, 72, 0.4)';
       ctx.fill();
-      // 글래스 스템 & 베이스
-      ctx.beginPath();
-      ctx.moveTo(115, 102);
-      ctx.lineTo(115, 135);
-      ctx.moveTo(100, 135);
-      ctx.lineTo(130, 135);
-      ctx.stroke();
 
-      // 하단 앱 명 텍스트
+      // 소주잔 2/3 실루엣
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 2.5;
+      ctx.strokeRect(98, 76, 32, 46);
+      ctx.fillStyle = 'rgba(52, 211, 153, 0.85)';
+      ctx.fillRect(100, 92, 28, 28);
+
       ctx.fillStyle = '#ffffff';
-      ctx.font = 'bold 16px -apple-system, sans-serif';
+      ctx.font = '800 15px -apple-system, BlinkMacSystemFont, sans-serif';
       ctx.textAlign = 'center';
-      ctx.fillText('ONE BOTTLE', 90, 162);
+      ctx.fillText('ONE BOTTLE', 90, 160);
 
-      const iconUrl = canvas.toDataURL('image/png');
-      const linkTouch = document.createElement('link');
-      linkTouch.rel = 'apple-touch-icon';
-      linkTouch.href = iconUrl;
-      document.head.appendChild(linkTouch);
-
-      const linkFav = document.createElement('link');
-      linkFav.rel = 'icon';
-      linkFav.type = 'image/png';
-      linkFav.href = iconUrl;
-      document.head.appendChild(linkFav);
+      const url = canvas.toDataURL('image/png');
+      const link = document.createElement('link');
+      link.rel = 'apple-touch-icon';
+      link.href = url;
+      document.head.appendChild(link);
     })();
   </script>
 
   <style>
     :root {
-      --bg: #090b0e;
-      --card: #13171f;
-      --border: #232936;
-      --soju-green: #10b981;
-      --danger: #ef4444;
-      --amber: #f59e0b;
-      --water-blue: #0284c7;
-      --text: #f8fafc;
-      --muted: #64748b;
+      --bg-dark: #07090d;
+      --card-glass: rgba(18, 24, 35, 0.65);
+      --card-glass-active: rgba(26, 36, 52, 0.85);
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-focus: rgba(255, 255, 255, 0.22);
+      
+      --accent-soju: #10b981;
+      --accent-soju-glow: rgba(16, 185, 129, 0.35);
+      --accent-wine: #e11d48;
+      --accent-beer: #f59e0b;
+      --accent-whiskey: #d97706;
+      --accent-makgeolli: #94a3b8;
+      --accent-etc: #06b6d4;
+
+      --theme-accent: var(--accent-soju);
+      --theme-glow: var(--accent-soju-glow);
+
+      --danger: #f43f5e;
+      --warning: #fbbf24;
+      --text-main: #f8fafc;
+      --text-sub: #94a3b8;
+      --text-dim: #64748b;
     }
+
     * {
       box-sizing: border-box;
       margin: 0;
@@ -99,312 +94,378 @@
       -webkit-tap-highlight-color: transparent;
       user-select: none;
     }
+
     body {
-      background-color: var(--bg);
-      color: var(--text);
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: radial-gradient(circle at 50% -10%, #151d2a 0%, #0c1017 50%, var(--bg-dark) 100%);
+      color: var(--text-main);
+      font-family: -apple-system, BlinkMacSystemFont, "Pretendard Variable", "Pretendard", sans-serif;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      padding: env(safe-area-inset-top) 16px calc(env(safe-area-inset-bottom) + 80px) 16px;
+      padding: env(safe-area-inset-top) 18px calc(env(safe-area-inset-bottom) + 85px) 18px;
       touch-action: manipulation;
+      overflow-x: hidden;
+      letter-spacing: -0.015em;
     }
 
-    /* 초록 소주병 전용 인라인 SVG 아이콘 */
-    .soju-icon-svg {
-      display: inline-block;
-      vertical-align: middle;
-      width: 1.2em;
-      height: 1.8em;
-    }
-
+    /* 상단 헤더 */
     header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 12px 0;
-      border-bottom: 1px solid var(--border);
+      padding: 14px 0 10px 0;
     }
-    .header-title h1 { font-size: 1.15rem; font-weight: 800; letter-spacing: -0.5px; }
-    .header-title p { font-size: 0.75rem; color: var(--muted); }
-    .header-actions { display: flex; gap: 8px; }
-    .btn-icon {
-      background: var(--card);
-      border: 1px solid var(--border);
-      color: var(--text);
-      border-radius: 8px;
-      padding: 6px 10px;
-      font-size: 0.85rem;
+    .brand-box h1 {
+      font-size: 1.25rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      background: linear-gradient(180deg, #ffffff 40%, #94a3b8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .brand-box p {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      margin-top: 1px;
+    }
+    .header-btns { display: flex; gap: 8px; }
+    .glass-btn {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border-subtle);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      color: var(--text-sub);
+      border-radius: 20px;
+      padding: 6px 12px;
+      font-size: 0.8rem;
+      font-weight: 500;
       cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .glass-btn:active {
+      background: rgba(255, 255, 255, 0.12);
+      transform: scale(0.96);
     }
 
     /* 앰버 알림 */
     #amber-banner {
       display: none;
-      background: rgba(245, 158, 11, 0.15);
-      border: 1px solid var(--amber);
+      background: rgba(251, 191, 36, 0.08);
+      border: 1px solid rgba(251, 191, 36, 0.3);
+      backdrop-filter: blur(8px);
       color: #fbbf24;
-      border-radius: 8px;
-      padding: 10px;
-      margin-top: 12px;
+      border-radius: 12px;
+      padding: 10px 14px;
+      margin: 8px 0 4px 0;
       font-size: 0.8rem;
       text-align: center;
-      animation: pulse 2s infinite;
+      line-height: 1.4;
+      animation: ambientPulse 2.5s infinite ease-in-out;
     }
-    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
+    @keyframes ambientPulse { 0%, 100% { opacity: 0.9; } 50% { opacity: 0.45; } }
 
-    /* 중앙 보틀 인디케이터 */
-    .bottle-section {
+    /* 멀티 보틀 쇼케이스 */
+    .showcase-stage {
+      position: relative;
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 14px 0 10px 0;
+      padding: 10px 0 6px 0;
     }
-    .bottle-indicator-wrap {
+    .ambient-glow-disc {
+      position: absolute;
+      top: 10%;
+      width: 190px;
+      height: 190px;
+      border-radius: 50%;
+      background: var(--theme-glow);
+      filter: blur(55px);
+      z-index: 0;
+      pointer-events: none;
+      transition: background 0.4s ease;
+    }
+    .bottles-flex-rack {
       position: relative;
-      width: 80px;
+      z-index: 1;
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      gap: 14px;
+      height: 185px;
+      min-width: 140px;
+    }
+    .bottle-unit {
+      position: relative;
+      width: 72px;
       height: 180px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
     }
-    .bottle-svg { width: 100%; height: 100%; }
-    .liquid-level {
-      transition: height 0.4s ease, y 0.4s ease;
-    }
-    .status-box {
-      margin-top: 8px;
+    .bottle-unit svg { width: 100%; height: 100%; filter: drop-shadow(0 8px 16px rgba(0,0,0,0.5)); }
+
+    .status-summary {
+      position: relative;
+      z-index: 1;
       text-align: center;
+      margin-top: 6px;
     }
-    .status-percent {
-      font-size: 1.6rem;
+    .quota-percent {
+      font-size: 1.8rem;
       font-weight: 900;
-      color: var(--soju-green);
+      letter-spacing: -0.04em;
+      color: var(--theme-accent);
+      transition: color 0.3s;
     }
-    .status-sub {
-      font-size: 0.8rem;
-      color: var(--muted);
-      margin-top: 2px;
+    .quota-fraction {
+      font-size: 0.82rem;
+      color: var(--text-sub);
+      font-weight: 500;
+      margin-top: 1px;
     }
 
     /* 탭 바 */
-    .tabs-wrap {
+    .capsule-tabs {
       display: flex;
       gap: 8px;
       overflow-x: auto;
-      padding: 6px 0 12px 0;
+      padding: 10px 2px 14px 2px;
       scrollbar-width: none;
     }
-    .tabs-wrap::-webkit-scrollbar { display: none; }
-    .tab-item {
+    .capsule-tabs::-webkit-scrollbar { display: none; }
+    .capsule-tab {
       flex: 0 0 auto;
-      padding: 8px 14px;
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      color: var(--muted);
-      font-size: 0.85rem;
+      padding: 7px 14px;
+      background: var(--card-glass);
+      border: 1px solid var(--border-subtle);
+      border-radius: 24px;
+      color: var(--text-sub);
+      font-size: 0.84rem;
+      font-weight: 500;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 7px;
       cursor: pointer;
+      backdrop-filter: blur(16px);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    .tab-item.active {
-      border-color: var(--soju-green);
-      color: var(--text);
+    .capsule-tab.active {
+      border-color: var(--theme-accent);
+      background: var(--card-glass-active);
+      color: #ffffff;
       font-weight: 700;
-      background: rgba(16, 185, 129, 0.08);
+      box-shadow: 0 4px 16px var(--theme-glow);
     }
 
-    /* 인터랙티브 잔 그리드 */
-    .grid-container {
+    /* 잔 그리드 */
+    .glasses-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 10px;
-      margin-top: 6px;
     }
-    .glass-box {
-      aspect-ratio: 1;
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
+    .glass-tile {
+      aspect-ratio: 0.9;
+      background: var(--card-glass);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 4px;
+      gap: 6px;
       cursor: pointer;
       position: relative;
-      transition: all 0.15s;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    .glass-box:active { transform: scale(0.94); }
-    .glass-box.filled {
-      border-color: var(--soju-green);
-      background: rgba(16, 185, 129, 0.12);
+    .glass-tile:active { transform: scale(0.93); }
+    .glass-tile.filled {
+      border-color: var(--theme-accent);
+      background: rgba(255, 255, 255, 0.05);
+      box-shadow: inset 0 0 16px var(--theme-glow), 0 4px 12px rgba(0, 0, 0, 0.3);
     }
-    .glass-box .icon-area { font-size: 1.4rem; opacity: 0.35; }
-    .glass-box.filled .icon-area { opacity: 1; filter: drop-shadow(0 0 8px var(--soju-green)); }
-    .glass-box .num-tag { font-size: 0.7rem; color: var(--muted); }
+    .tile-svg-box {
+      width: 44px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .tile-svg-box svg { width: 100%; height: 100%; }
+    .tile-label {
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--text-dim);
+    }
+    .glass-tile.filled .tile-label { color: var(--text-main); }
 
-    /* 초과 음주 [+] 버튼 */
-    .glass-box.extra-btn {
-      border: 2px dashed var(--danger);
-      background: rgba(239, 68, 68, 0.1);
-      animation: pulseDanger 1.5s infinite;
+    /* 초과 잔 [+] */
+    .glass-tile.tile-extra {
+      border: 1.5px dashed var(--danger);
+      background: rgba(244, 63, 94, 0.08);
+      animation: dangerPulse 1.8s infinite;
     }
-    @keyframes pulseDanger { 0%, 100% { border-color: var(--danger); } 50% { border-color: transparent; } }
-    .glass-box.extra-btn .icon-area { opacity: 1; font-size: 1.8rem; color: var(--danger); }
-    .glass-box.extra-btn .num-tag { color: var(--danger); font-weight: 700; }
+    @keyframes dangerPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.55; } }
+    .glass-tile.tile-extra .tile-label { color: var(--danger); font-weight: 700; }
 
-    /* 우측 하단 플로팅 H2O 수분 방어 버튼 */
-    .fab-water {
+    /* 우측 하단 H2O 플로팅 버튼 */
+    .h2o-floater {
       position: fixed;
       right: 18px;
       bottom: calc(env(safe-area-inset-bottom) + 18px);
-      background: linear-gradient(135deg, #0284c7, #0369a1);
-      border: 1px solid rgba(255,255,255,0.2);
-      border-radius: 30px;
+      background: linear-gradient(135deg, rgba(2, 132, 199, 0.85), rgba(3, 105, 161, 0.95));
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(16px);
+      border-radius: 32px;
       padding: 10px 18px;
       display: flex;
       align-items: center;
       gap: 8px;
-      box-shadow: 0 6px 20px rgba(2, 132, 199, 0.4);
+      box-shadow: 0 8px 24px rgba(2, 132, 199, 0.4);
       cursor: pointer;
-      z-index: 50;
-      transition: transform 0.1s;
+      z-index: 80;
+      transition: transform 0.15s ease;
     }
-    .fab-water:active { transform: scale(0.92); }
-    .fab-water .water-title { font-size: 0.85rem; font-weight: 700; color: #fff; }
-    .fab-water .water-badge {
-      background: #fff;
+    .h2o-floater:active { transform: scale(0.92); }
+    .h2o-label { font-size: 0.85rem; font-weight: 700; color: #ffffff; letter-spacing: 0.02em; }
+    .h2o-badge {
+      background: rgba(255, 255, 255, 0.95);
       color: #0369a1;
       font-size: 0.75rem;
-      font-weight: 800;
-      padding: 2px 7px;
+      font-weight: 900;
+      padding: 1px 7px;
       border-radius: 12px;
     }
 
-    /* 공통 모달 */
-    .modal-overlay {
+    /* 모달 */
+    .overlay-backdrop {
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.88);
-      backdrop-filter: blur(5px);
-      z-index: 200;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 300;
       align-items: center;
       justify-content: center;
       padding: 20px;
     }
-    .modal-sheet {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 18px;
+    .glass-dialog {
+      background: #0f141d;
+      border: 1px solid var(--border-focus);
+      border-radius: 22px;
       width: 100%;
-      max-width: 380px;
-      max-height: 85vh;
+      max-width: 390px;
+      max-height: 86vh;
       overflow-y: auto;
-      padding: 22px;
+      padding: 24px;
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 18px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.7);
     }
-    .modal-sheet h2 { font-size: 1.15rem; font-weight: 800; }
-    .modal-sheet p { font-size: 0.8rem; color: var(--muted); }
+    .glass-dialog h2 { font-size: 1.2rem; font-weight: 800; letter-spacing: -0.02em; }
+    .glass-dialog p { font-size: 0.82rem; color: var(--text-sub); }
 
-    /* 온보딩 주종별 설정 카드 */
-    .bev-config-card {
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 12px;
+    .bev-item-card {
+      border: 1px solid var(--border-subtle);
+      border-radius: 14px;
+      padding: 12px 14px;
       background: rgba(255, 255, 255, 0.02);
       display: flex;
       flex-direction: column;
       gap: 10px;
     }
-    .bev-config-card.active {
-      border-color: var(--soju-green);
-      background: rgba(16, 185, 129, 0.05);
+    .bev-item-card.selected {
+      border-color: var(--accent-soju);
+      background: rgba(16, 185, 129, 0.06);
     }
-    .bev-card-header {
+    .card-topline {
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
-    .bev-title-box {
+    .bev-check-label {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
       font-size: 0.95rem;
       font-weight: 700;
     }
-    .unit-toggle {
+    .unit-switch {
       display: flex;
-      background: var(--bg);
-      border-radius: 6px;
+      background: #090c12;
+      border-radius: 8px;
       padding: 2px;
-      border: 1px solid var(--border);
+      border: 1px solid var(--border-subtle);
     }
-    .unit-btn {
+    .unit-opt {
       background: transparent;
       border: none;
-      color: var(--muted);
-      font-size: 0.75rem;
-      padding: 3px 8px;
-      border-radius: 4px;
+      color: var(--text-dim);
+      font-size: 0.74rem;
+      padding: 4px 9px;
+      border-radius: 6px;
       cursor: pointer;
     }
-    .unit-btn.selected {
-      background: var(--border);
-      color: var(--text);
+    .unit-opt.on {
+      background: rgba(255, 255, 255, 0.12);
+      color: #fff;
       font-weight: 700;
     }
-    .stepper-row {
+    .card-bottomline {
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
-    .calc-info { font-size: 0.75rem; color: var(--muted); }
-    .step-control {
+    .formula-txt { font-size: 0.76rem; color: var(--text-sub); }
+    .stepper-box {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
     }
-    .step-control button {
-      width: 30px;
-      height: 30px;
-      border-radius: 6px;
-      background: var(--border);
-      color: var(--text);
+    .stepper-box button {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
       border: none;
-      font-size: 1rem;
+      font-size: 1.1rem;
       cursor: pointer;
     }
-    .btn-submit {
-      background: var(--soju-green);
+    .stepper-box strong { font-size: 1rem; min-width: 20px; text-align: center; }
+
+    .btn-action-primary {
+      background: linear-gradient(135deg, #10b981, #059669);
       color: #000;
       border: none;
-      border-radius: 10px;
+      border-radius: 12px;
       padding: 14px;
       font-weight: 800;
       font-size: 0.95rem;
       cursor: pointer;
+      box-shadow: 0 4px 20px rgba(16, 185, 129, 0.3);
     }
 
-    /* 거울치료 모달 */
-    #mirror-modal .modal-sheet {
-      border-color: var(--danger);
+    /* 거울치료 */
+    #mirror-modal .glass-dialog {
+      border-color: rgba(244, 63, 94, 0.4);
       text-align: center;
-      padding: 24px;
+      padding: 26px;
     }
-    .mirror-frame {
+    .camera-disc {
       width: 210px;
       height: 210px;
       border-radius: 50%;
-      margin: 10px auto;
+      margin: 12px auto;
       overflow: hidden;
-      border: 4px solid var(--danger);
-      box-shadow: 0 0 25px rgba(239, 68, 68, 0.6);
-      position: relative;
+      border: 3px solid var(--danger);
+      box-shadow: 0 0 30px rgba(244, 63, 94, 0.5);
+      background: #000;
     }
-    #camera-video {
+    #camera-view {
       width: 100%;
       height: 100%;
       object-fit: cover;
@@ -414,448 +475,715 @@
 </head>
 <body>
 
-  <!-- 상단 네비게이션 -->
+  <!-- 헤더 -->
   <header>
-    <div class="header-title">
-      <h1>원바틀 · 1차 세션</h1>
-      <p id="session-date">세션 준비 중</p>
+    <div class="brand-box">
+      <h1>원바틀</h1>
+      <p id="header-date">오늘의 1차 절주</p>
     </div>
-    <div class="header-actions">
-      <button class="btn-icon" onclick="openConfigModal()">⚙️ 주량 설정</button>
-      <button class="btn-icon" onclick="resetSession()">🔄 리셋</button>
+    <div class="header-btns">
+      <button class="glass-btn" onclick="openSettings()">⚙️ 주량 설정</button>
+      <button class="glass-btn" onclick="requestReset()">🔄 리셋</button>
     </div>
   </header>
 
   <!-- 막잔 경고 배너 -->
-  <div id="amber-banner">⚠️ 이번 차수 마지막 잔입니다! 물을 마시며 품격 있게 마무리하세요.</div>
+  <div id="amber-banner">⚠️ 이번 차수 마지막 잔입니다. 물 한 잔을 마시며 1차를 멋지게 완성하세요.</div>
 
-  <!-- 보틀 인디케이터 -->
-  <section class="bottle-section">
-    <div class="bottle-indicator-wrap">
-      <svg class="bottle-svg" viewBox="0 0 100 240" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <clipPath id="custom-bottle-clip">
-            <path d="M43 6 H57 V22 H43 Z M41 22 H59 V48 Q59 62 76 72 Q82 76 82 86 V224 Q82 232 72 232 H28 Q18 232 18 224 V86 Q18 76 24 72 Q41 62 41 48 Z" />
-          </clipPath>
-        </defs>
-
-        <!-- 내부 배경 및 액체 채움 -->
-        <g clip-path="url(#custom-bottle-clip)">
-          <rect width="100" height="240" fill="#08281a" />
-          <rect id="bottle-liquid" x="0" y="232" width="100" height="0" fill="var(--soju-green)" class="liquid-level" />
-        </g>
-
-        <!-- 소주병 바디 라인 -->
-        <path d="M43 6 H57 V22 H43 Z M41 22 H59 V48 Q59 62 76 72 Q82 76 82 86 V224 Q82 232 72 232 H28 Q18 232 18 224 V86 Q18 76 24 72 Q41 62 41 48 Z" 
-              stroke="#2ed573" stroke-width="2.5" stroke-opacity="0.7" fill="none" />
-        <!-- 은색 캡 -->
-        <rect x="43" y="6" width="14" height="16" rx="2" fill="#94a3b8" />
-        <!-- 소주 흰색 라벨 -->
-        <rect x="26" y="115" width="48" height="58" rx="3" fill="#ffffff" fill-opacity="0.92" />
-        <text x="50" y="142" fill="#064e3b" font-size="9" font-weight="900" text-anchor="middle">원바틀</text>
-        <text x="50" y="157" fill="#047857" font-size="6" font-weight="700" text-anchor="middle">1차 1병 절주</text>
-      </svg>
-    </div>
-    <div class="status-box">
-      <div class="status-percent" id="total-percent-text">0%</div>
-      <div class="status-sub" id="status-detail-text">주량 한계선 대기 중</div>
+  <!-- 멀티 보틀 쇼케이스 -->
+  <section class="showcase-stage">
+    <div class="ambient-glow-disc" id="ambient-disc"></div>
+    <div class="bottles-flex-rack" id="bottles-rack"></div>
+    <div class="status-summary">
+      <div class="quota-percent" id="status-percent">0%</div>
+      <div class="quota-fraction" id="status-desc">주량 동기화 중...</div>
     </div>
   </section>
 
-  <!-- 주종 탭 바 (선택된 주종만 표시) -->
-  <div class="tabs-wrap" id="tabs-container"></div>
+  <!-- 주종 캡슐 탭 -->
+  <div class="capsule-tabs" id="tabs-bar"></div>
 
-  <!-- 잔 선택 그리드 -->
-  <div class="grid-container" id="grid-container"></div>
+  <!-- 잔 그리드 -->
+  <div class="glasses-grid" id="glasses-grid"></div>
 
-  <!-- 우측 하단 수분 보충 플로팅 버튼 -->
-  <div class="fab-water" onclick="addWater()">
-    <span style="font-size:1.1rem;">💧</span>
-    <span class="water-title">H₂O</span>
-    <span class="water-badge" id="water-badge">0</span>
+  <!-- H2O 플로팅 버튼 -->
+  <div class="h2o-floater" onclick="drinkWater()">
+    <span style="font-size:1.05rem;">💧</span>
+    <span class="h2o-label">H₂O</span>
+    <span class="h2o-badge" id="h2o-badge">0</span>
   </div>
 
-  <!-- 온보딩 및 주량 수정 모달 -->
-  <div class="modal-overlay" id="config-modal">
-    <div class="modal-sheet">
+  <!-- 주량 설정 모달 -->
+  <div class="overlay-backdrop" id="settings-modal">
+    <div class="glass-dialog">
       <div>
-        <h2>1차 주량 커스텀 설정</h2>
-        <p>오늘 마실 주종을 선택하고 목표 주량을 설정하세요.</p>
+        <h2>1차 주량 설정</h2>
+        <p>오늘 마실 주종과 한계 주량을 설정하세요.</p>
       </div>
-      <div id="bev-selection-list" style="display:flex; flex-direction:column; gap:10px;"></div>
-      <button class="btn-submit" onclick="saveConfiguration()">설정 완료 및 잠금</button>
+      <div id="settings-card-list" style="display:flex; flex-direction:column; gap:10px;"></div>
+      <button class="btn-action-primary" onclick="commitSettings()">주량 저장 및 시작</button>
     </div>
   </div>
 
-  <!-- 초과 음주 전면 카메라 거울치료 모달 -->
-  <div class="modal-overlay" id="mirror-modal">
-    <div class="modal-sheet">
-      <h2 style="color:var(--danger);">⚠️ 주량 한계 도달 (초과 음주)</h2>
-      <div class="mirror-frame">
-        <video id="camera-video" autoplay playsinline muted></video>
+  <!-- 거울치료 모달 -->
+  <div class="overlay-backdrop" id="mirror-modal">
+    <div class="glass-dialog">
+      <h2 style="color:var(--danger);">⚠️ 1차 주량 한계선 도달</h2>
+      <div class="camera-disc">
+        <video id="camera-view" autoplay playsinline muted></video>
       </div>
-      <p style="line-height:1.5;">
+      <p style="line-height:1.5; color:var(--text-main);">
         지금 당신의 풀린 눈빛과 붉어진 얼굴을 똑바로 보세요.<br>
-        <strong>1차의 품격은 여기서 멈출 때 완성됩니다. 즉시 귀가하세요!</strong>
+        <strong>1차의 품격은 스스로 멈출 때 완성됩니다. 즉시 귀가하세요!</strong>
       </p>
-      <button class="btn-submit" style="background:var(--danger); color:#fff;" onclick="dismissMirror()">거울 닫고 스스로 멈추기</button>
+      <button class="btn-action-primary" style="background:var(--danger); color:#fff;" onclick="closeMirror()">거울 닫고 절주하기</button>
     </div>
   </div>
 
   <script>
-    // 6대 주종 규격 정의 (소주는 초록색 소주병 SVG 전용)
-    const SOJU_SVG = `
-      <svg class="soju-icon-svg" viewBox="0 0 40 70" fill="none">
-        <rect x="15" y="2" width="10" height="8" rx="1" fill="#cbd5e1"/>
-        <path d="M14 10 H26 V20 Q26 26 34 32 V64 Q34 68 28 68 H12 Q6 68 6 64 V32 Q14 26 14 20 Z" fill="#10b981"/>
-        <rect x="10" y="34" width="20" height="22" rx="2" fill="#ffffff" fill-opacity="0.9"/>
-        <line x1="13" y1="42" x2="27" y2="42" stroke="#047857" stroke-width="2"/>
-      </svg>
-    `;
+    /* ==========================================================================
+       참이슬 실물 기반 초록 소주병 (정밀 벡터 SVG 에셋)
+       ========================================================================== */
+    function getChamisulBottleSvg(uniqueId, fillPercent) {
+      // 바디 높이 매핑 (액체 수위 y좌표: 172(바닥) ~ 38(병목 상단))
+      const fillHeight = Math.min(Math.max(fillPercent, 0), 1.0) * 134;
+      const yPos = 172 - fillHeight;
 
-    const BEVERAGE_MASTER = {
-      soju:      { name: '소주',      unitType: 'bottle', ratio: 8,   defaultVal: 1, icon: SOJU_SVG, isSvg: true,  unitName: '병', glassName: '잔' },
-      beer:      { name: '맥주',      unitType: 'bottle', ratio: 1.5, defaultVal: 2, icon: '🍺',     isSvg: false, unitName: '캔/병', glassName: '잔' },
-      wine:      { name: '와인',      unitType: 'bottle', ratio: 5,   defaultVal: 1, icon: '🍷',     isSvg: false, unitName: '병', glassName: '잔' },
-      whiskey:   { name: '위스키',    unitType: 'glass',  ratio: 1,   defaultVal: 3, icon: '🥃',     isSvg: false, unitName: '잔', glassName: '잔' },
-      makgeolli: { name: '막걸리',    unitType: 'bottle', ratio: 5,   defaultVal: 1, icon: '🍶',     isSvg: false, unitName: '병', glassName: '사발' },
-      etc:       { name: '하이볼/기타', unitType: 'glass',  ratio: 1,   defaultVal: 2, icon: '🍹',     isSvg: false, unitName: '잔', glassName: '잔' }
+      return `
+      <svg viewBox="0 0 74 185" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <!-- 참이슬 실물 곡선 클립패스 -->
+          <clipPath id="chamisul-clip-${uniqueId}">
+            <path d="M 28 8 H 46 V 26 H 28 Z
+                     M 26 26 H 48 V 40 Q 48 42 49 43 Q 46 44 48 48 L 52 64 Q 66 76 66 90 V 170 Q 66 178 58 178 H 16 Q 8 178 8 170 V 90 Q 8 76 22 64 L 26 48 Q 28 44 25 43 Q 26 42 26 40 Z" />
+          </clipPath>
+          <linearGradient id="soju-liquid-grad-${uniqueId}" x1="0" y1="0" x2="0" y2="185" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#34d399"/>
+            <stop offset="50%" stop-color="#10b981"/>
+            <stop offset="100%" stop-color="#047857"/>
+          </linearGradient>
+          <radialGradient id="dewdrop-${uniqueId}" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#38bdf8"/>
+            <stop offset="80%" stop-color="#0284c7"/>
+            <stop offset="100%" stop-color="#0369a1"/>
+          </radialGradient>
+        </defs>
+
+        <!-- 병 내부 액체 충전 영역 -->
+        <g clip-path="url(#chamisul-clip-${uniqueId})">
+          <!-- 비어있는 참이슬 짙은 초록색 유리톤 -->
+          <rect width="74" height="185" fill="#072213"/>
+          <!-- 차오르는 영롱한 에메랄드 소주 액체 -->
+          <rect x="0" y="${yPos}" width="74" height="${fillHeight}" fill="url(#soju-liquid-grad-${uniqueId})" style="transition: all 0.45s cubic-bezier(0.16, 1, 0.3, 1);"/>
+          <!-- 액체 수면 림 (Meniscus) -->
+          <ellipse cx="37" cy="${yPos}" rx="28" ry="3" fill="#6ee7b7" opacity="${fillPercent > 0 ? 0.75 : 0}"/>
+        </g>
+
+        <!-- 참이슬 특유의 투명 에메랄드 외곽 라인 -->
+        <path d="M 28 8 H 46 V 26 H 28 Z
+                 M 26 26 H 48 V 40 Q 48 42 49 43 Q 46 44 48 48 L 52 64 Q 66 76 66 90 V 170 Q 66 178 58 178 H 16 Q 8 178 8 170 V 90 Q 8 76 22 64 L 26 48 Q 28 44 25 43 Q 26 42 26 40 Z"
+              stroke="#22c55e" stroke-width="1.8" stroke-opacity="0.8" fill="rgba(34, 197, 94, 0.08)"/>
+
+        <!-- 병 좌측 곡면을 타고 흐르는 리얼한 수직 유리 반사광 (Specular) -->
+        <path d="M 29 44 L 24 64 Q 12 76 12 90 V 168" stroke="rgba(255, 255, 255, 0.4)" stroke-width="2" stroke-linecap="round" fill="none"/>
+        <!-- 우측 가장자리 미세 반사광 -->
+        <path d="M 62 92 V 166" stroke="rgba(255, 255, 255, 0.2)" stroke-width="1.2" stroke-linecap="round" fill="none"/>
+
+        <!-- 병목 중간 유리 엠보싱 링 (실물 디테일) -->
+        <ellipse cx="37" cy="44" rx="11" ry="1.6" stroke="#16a34a" stroke-width="1.2" fill="none" opacity="0.85"/>
+
+        <!-- 참이슬 시그니처 초록 금속 캡 (리브 홈 & 안전 링) -->
+        <rect x="27" y="8" width="20" height="18" rx="2" fill="#1b5e20"/>
+        <line x1="30" y1="9" x2="30" y2="21" stroke="#4ade80" stroke-width="0.9" opacity="0.8"/>
+        <line x1="34" y1="9" x2="34" y2="21" stroke="#4ade80" stroke-width="0.9" opacity="0.8"/>
+        <line x1="37" y1="9" x2="37" y2="21" stroke="#4ade80" stroke-width="0.9" opacity="0.8"/>
+        <line x1="40" y1="9" x2="40" y2="21" stroke="#4ade80" stroke-width="0.9" opacity="0.8"/>
+        <line x1="44" y1="9" x2="44" y2="21" stroke="#4ade80" stroke-width="0.9" opacity="0.8"/>
+        <rect x="26.5" y="21.5" width="21" height="4.5" rx="1" fill="#14532d" stroke="#22c55e" stroke-width="0.8"/>
+
+        <!-- 화이트 매트 참이슬 스타일 라벨 -->
+        <rect x="15" y="90" width="44" height="60" rx="2.5" fill="#f8fafc" fill-opacity="0.96" stroke="rgba(0,0,0,0.06)" stroke-width="0.8"/>
+        
+        <!-- 좌측 상단 원바틀 심볼 -->
+        <circle cx="21" cy="98" r="3" fill="#0284c7" opacity="0.85"/>
+        <text x="21" y="105" fill="#0369a1" font-size="3.5" font-weight="700" text-anchor="middle">SINCE 2026</text>
+
+        <!-- 참이슬 폰트 배치 메인 로고 "원바틀" -->
+        <text x="37" y="112" fill="#0f172a" font-size="9.5" font-weight="900" font-family="'Pretendard', sans-serif" text-anchor="middle" letter-spacing="-0.5px">원</text>
+        <text x="37" y="123" fill="#0f172a" font-size="9" font-weight="900" font-family="'Pretendard', sans-serif" text-anchor="middle" letter-spacing="-0.5px">바</text>
+        <text x="37" y="134" fill="#0f172a" font-size="8.5" font-weight="900" font-family="'Pretendard', sans-serif" text-anchor="middle" letter-spacing="-0.5px">틀</text>
+
+        <!-- 파란 이슬방울 그래픽 (참이슬 오리지널 모티브) -->
+        <ellipse cx="23" cy="136" rx="5.5" ry="6.5" fill="url(#dewdrop-${uniqueId})"/>
+        <ellipse cx="21.5" cy="134" rx="2" ry="1.2" fill="#ffffff" opacity="0.8"/>
+
+        <!-- 라벨 우측 하단 미세 디테일 [1차용] -->
+        <rect x="42" y="141" width="13" height="6" rx="1" fill="none" stroke="#94a3b8" stroke-width="0.6"/>
+        <text x="48.5" y="145.5" fill="#64748b" font-size="3.5" font-weight="700" text-anchor="middle">1차용</text>
+
+        <!-- 하단 두꺼운 유리 바닥 & 환경보호 엠보싱 텍스처 -->
+        <rect x="13" y="167" width="48" height="6" rx="2" fill="rgba(6, 78, 59, 0.6)"/>
+        <line x1="16" y1="172" x2="58" y2="172" stroke="rgba(74, 222, 128, 0.4)" stroke-width="1.2"/>
+      </svg>`;
+    }
+
+    /* 타 주종 상단 병 템플릿 */
+    function getOtherBottleSvg(type, uniqueId, fillPercent) {
+      const fillHeight = Math.min(Math.max(fillPercent, 0), 1.0) * 135;
+      const yPos = 155 - fillHeight;
+
+      if (type === 'wine') {
+        return `
+        <svg viewBox="0 0 70 170" fill="none">
+          <defs>
+            <clipPath id="clip-${uniqueId}">
+              <path d="M30 6 H40 V28 H30 Z M28 28 H42 V48 Q42 66 58 80 V152 Q58 156 50 156 H20 Q12 156 12 152 V80 Q28 66 28 48 Z"/>
+            </clipPath>
+          </defs>
+          <g clip-path="url(#clip-${uniqueId})">
+            <rect width="70" height="170" fill="#20060d"/>
+            <rect x="0" y="${yPos}" width="70" height="${fillHeight}" fill="#e11d48" style="transition: all 0.45s ease;"/>
+          </g>
+          <path d="M30 6 H40 V28 H30 Z M28 28 H42 V48 Q42 66 58 80 V152 Q58 156 50 156 H20 Q12 156 12 152 V80 Q28 66 28 48 Z" 
+                stroke="#fb7185" stroke-width="2" stroke-opacity="0.8" fill="none"/>
+          <rect x="30" y="6" width="10" height="20" rx="1" fill="#be123c"/>
+          <rect x="18" y="92" width="34" height="42" rx="2" fill="#fef2f2" fill-opacity="0.92"/>
+          <text x="35" y="114" fill="#881337" font-size="7" font-weight="900" text-anchor="middle">RESERVE</text>
+        </svg>`;
+      } else if (type === 'beer') {
+        return `
+        <svg viewBox="0 0 70 170" fill="none">
+          <defs>
+            <clipPath id="clip-${uniqueId}">
+              <path d="M29 10 H41 V26 H29 Z M27 26 H43 V44 Q43 56 57 66 V150 Q57 156 49 156 H21 Q13 156 13 150 V66 Q27 56 27 44 Z"/>
+            </clipPath>
+          </defs>
+          <g clip-path="url(#clip-${uniqueId})">
+            <rect width="70" height="170" fill="#241403"/>
+            <rect x="0" y="${yPos}" width="70" height="${fillHeight}" fill="#f59e0b" style="transition: all 0.45s ease;"/>
+          </g>
+          <path d="M29 10 H41 V26 H29 Z M27 26 H43 V44 Q43 56 57 66 V150 Q57 156 49 156 H21 Q13 156 13 150 V66 Q27 56 27 44 Z" 
+                stroke="#fbbf24" stroke-width="2" stroke-opacity="0.8" fill="none"/>
+          <rect x="29" y="8" width="12" height="7" rx="2" fill="#d97706"/>
+          <rect x="17" y="80" width="36" height="46" rx="3" fill="#fef3c7" fill-opacity="0.95"/>
+          <text x="35" y="104" fill="#78350f" font-size="7.5" font-weight="900" text-anchor="middle">LAGER</text>
+        </svg>`;
+      } else if (type === 'whiskey') {
+        return `
+        <svg viewBox="0 0 70 170" fill="none">
+          <defs>
+            <clipPath id="clip-${uniqueId}">
+              <path d="M28 14 H42 V28 H28 Z M20 28 H50 V48 L56 56 V150 Q56 156 48 156 H22 Q14 156 14 150 V56 L20 48 Z"/>
+            </clipPath>
+          </defs>
+          <g clip-path="url(#clip-${uniqueId})">
+            <rect width="70" height="170" fill="#1f1003"/>
+            <rect x="0" y="${yPos}" width="70" height="${fillHeight}" fill="#d97706" style="transition: all 0.45s ease;"/>
+          </g>
+          <path d="M28 14 H42 V28 H28 Z M20 28 H50 V48 L56 56 V150 Q56 156 48 156 H22 Q14 156 14 150 V56 L20 48 Z" 
+                stroke="#f59e0b" stroke-width="2" stroke-opacity="0.8" fill="none"/>
+          <rect x="28" y="10" width="14" height="14" rx="2" fill="#b45309"/>
+          <rect x="18" y="78" width="34" height="50" rx="2" fill="#fef3c7" fill-opacity="0.9"/>
+          <text x="35" y="106" fill="#451a03" font-size="6.5" font-weight="900" text-anchor="middle">WHISKY</text>
+        </svg>`;
+      } else {
+        // 막걸리 / 기타
+        return `
+        <svg viewBox="0 0 70 170" fill="none">
+          <defs>
+            <clipPath id="clip-${uniqueId}">
+              <path d="M28 12 H42 V26 H28 Z M24 26 H46 V44 Q46 56 55 68 V148 Q55 156 46 156 H24 Q15 156 15 148 V68 Q24 56 24 44 Z"/>
+            </clipPath>
+          </defs>
+          <g clip-path="url(#clip-${uniqueId})">
+            <rect width="70" height="170" fill="#1e293b"/>
+            <rect x="0" y="${yPos}" width="70" height="${fillHeight}" fill="#cbd5e1" style="transition: all 0.45s ease;"/>
+          </g>
+          <path d="M28 12 H42 V26 H28 Z M24 26 H46 V44 Q46 56 55 68 V148 Q55 156 46 156 H24 Q15 156 15 148 V68 Q24 56 24 44 Z" 
+                stroke="#94a3b8" stroke-width="2" stroke-opacity="0.8" fill="none"/>
+          <rect x="28" y="8" width="14" height="12" rx="2" fill="#047857"/>
+          <rect x="18" y="80" width="34" height="46" rx="3" fill="#ffffff" fill-opacity="0.95"/>
+          <text x="35" y="105" fill="#0f172a" font-size="7.5" font-weight="900" text-anchor="middle">원바틀</text>
+        </svg>`;
+      }
+    }
+
+    function renderBottleSvgDispatcher(type, uniqueId, fillPercent) {
+      if (type === 'soju') {
+        return getChamisulBottleSvg(uniqueId, fillPercent);
+      }
+      return getOtherBottleSvg(type, uniqueId, fillPercent);
+    }
+
+    /* ==========================================================================
+       참이슬형 2/3 소주잔 & 주종별 글래스 SVG
+       ========================================================================== */
+    function getSojuGlassSvg(isFilled) {
+      const fillOpacity = isFilled ? "0.92" : "0";
+      const meniscusOpacity = isFilled ? "0.95" : "0";
+      const borderCol = isFilled ? "#34d399" : "rgba(255,255,255,0.4)";
+
+      return `
+      <svg viewBox="0 0 36 44" fill="none">
+        <defs>
+          <clipPath id="soju-glass-clip">
+            <path d="M 6 5 L 9.5 33 C 9.7 36.5 11.5 38.5 14.5 38.5 H 21.5 C 24.5 38.5 26.3 36.5 26.5 33 L 30 5 Z"/>
+          </clipPath>
+          <linearGradient id="soju-liquid-grad" x1="0" y1="13" x2="0" y2="38" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#34d399"/>
+            <stop offset="100%" stop-color="#059669"/>
+          </linearGradient>
+        </defs>
+
+        <g clip-path="url(#soju-glass-clip)">
+          <rect x="5" y="13" width="26" height="26" fill="url(#soju-liquid-grad)" opacity="${fillOpacity}" />
+          <ellipse cx="18" cy="13" rx="10" ry="1.6" fill="#6ee7b7" opacity="${meniscusOpacity}" />
+        </g>
+
+        <path d="M 5 4.5 L 9 34 C 9.3 38 11.5 40 14.5 40 H 21.5 C 24.5 40 26.7 38 27 34 L 31 4.5 Z" 
+              stroke="${borderCol}" stroke-width="1.4" fill="rgba(255,255,255,0.03)" stroke-linejoin="round"/>
+        
+        <path d="M 8.5 29 L 27.5 29" stroke="rgba(255,255,255,0.25)" stroke-width="0.8"/>
+        <line x1="13" y1="29" x2="12.5" y2="39" stroke="rgba(255,255,255,0.3)" stroke-width="0.8"/>
+        <line x1="18" y1="29" x2="18" y2="39.5" stroke="rgba(255,255,255,0.3)" stroke-width="0.8"/>
+        <line x1="23" y1="29" x2="23.5" y2="39" stroke="rgba(255,255,255,0.3)" stroke-width="0.8"/>
+
+        <ellipse cx="18" cy="4.5" rx="13" ry="1.8" stroke="${borderCol}" stroke-width="1.2" fill="none"/>
+      </svg>`;
+    }
+
+    function getWineGlassSvg(isFilled) {
+      const col = isFilled ? "#e11d48" : "rgba(255,255,255,0.4)";
+      const fillOp = isFilled ? "0.85" : "0";
+      return `
+      <svg viewBox="0 0 36 44" fill="none">
+        <path d="M 10 5 C 10 20 26 20 26 5 Z" stroke="${col}" stroke-width="1.4" fill="rgba(255,255,255,0.03)"/>
+        <path d="M 12 12 C 12 19 24 19 24 12 Z" fill="#e11d48" opacity="${fillOp}"/>
+        <line x1="18" y1="20" x2="18" y2="37" stroke="${col}" stroke-width="1.4"/>
+        <line x1="12" y1="37" x2="24" y2="37" stroke="${col}" stroke-width="1.4"/>
+        <ellipse cx="18" cy="5" rx="8" ry="1.4" stroke="${col}" stroke-width="1"/>
+      </svg>`;
+    }
+
+    function getBeerGlassSvg(isFilled) {
+      const col = isFilled ? "#f59e0b" : "rgba(255,255,255,0.4)";
+      const fillOp = isFilled ? "0.9" : "0";
+      return `
+      <svg viewBox="0 0 36 44" fill="none">
+        <path d="M 9 6 L 11 38 H 25 L 27 6 Z" stroke="${col}" stroke-width="1.4" fill="rgba(255,255,255,0.03)"/>
+        <rect x="11.5" y="14" width="13" height="23" fill="#f59e0b" opacity="${fillOp}"/>
+        <rect x="10.5" y="10" width="15" height="5" rx="2" fill="#fef3c7" opacity="${fillOp}"/>
+      </svg>`;
+    }
+
+    function getWhiskeyGlassSvg(isFilled) {
+      const col = isFilled ? "#d97706" : "rgba(255,255,255,0.4)";
+      const fillOp = isFilled ? "0.9" : "0";
+      return `
+      <svg viewBox="0 0 36 44" fill="none">
+        <rect x="8" y="10" width="20" height="28" rx="2" stroke="${col}" stroke-width="1.4" fill="rgba(255,255,255,0.03)"/>
+        <rect x="9" y="20" width="18" height="17" fill="#d97706" opacity="${fillOp}"/>
+        <rect x="13" y="17" width="8" height="8" rx="1" stroke="#fde68a" stroke-width="1" fill="none" opacity="${fillOp}"/>
+      </svg>`;
+    }
+
+    function getMakgeolliBowlSvg(isFilled) {
+      const col = isFilled ? "#cbd5e1" : "rgba(255,255,255,0.4)";
+      const fillOp = isFilled ? "0.92" : "0";
+      return `
+      <svg viewBox="0 0 36 44" fill="none">
+        <path d="M 6 15 Q 18 38 30 15 Z" stroke="${col}" stroke-width="1.4" fill="rgba(255,255,255,0.03)"/>
+        <path d="M 8 19 Q 18 34 28 19 Z" fill="#f1f5f9" opacity="${fillOp}"/>
+        <ellipse cx="18" cy="15" rx="12" ry="2.2" stroke="${col}" stroke-width="1"/>
+      </svg>`;
+    }
+
+    function getEtcGlassSvg(isFilled) {
+      const col = isFilled ? "#06b6d4" : "rgba(255,255,255,0.4)";
+      const fillOp = isFilled ? "0.9" : "0";
+      return `
+      <svg viewBox="0 0 36 44" fill="none">
+        <rect x="11" y="6" width="14" height="32" rx="1" stroke="${col}" stroke-width="1.4" fill="rgba(255,255,255,0.03)"/>
+        <rect x="12" y="16" width="12" height="21" fill="#06b6d4" opacity="${fillOp}"/>
+        <line x1="19" y1="3" x2="23" y2="28" stroke="#f43f5e" stroke-width="1.2"/>
+      </svg>`;
+    }
+
+    function getGlassSvgByBeverage(type, isFilled) {
+      switch(type) {
+        case 'soju': return getSojuGlassSvg(isFilled);
+        case 'wine': return getWineGlassSvg(isFilled);
+        case 'beer': return getBeerGlassSvg(isFilled);
+        case 'whiskey': return getWhiskeyGlassSvg(isFilled);
+        case 'makgeolli': return getMakgeolliBowlSvg(isFilled);
+        default: return getEtcGlassSvg(isFilled);
+      }
+    }
+
+    /* ==========================================================================
+       주종 메타데이터 및 상태 관리
+       ========================================================================== */
+    const BEV_CATALOG = {
+      soju:      { name: '소주',   ratio: 8,   unit: '병', glass: '잔',   accent: '#10b981', glow: 'rgba(16, 185, 129, 0.35)' },
+      wine:      { name: '와인',   ratio: 5,   unit: '병', glass: '잔',   accent: '#e11d48', glow: 'rgba(225, 29, 72, 0.35)' },
+      beer:      { name: '맥주',   ratio: 1.5, unit: '캔', glass: '잔',   accent: '#f59e0b', glow: 'rgba(245, 158, 11, 0.35)' },
+      whiskey:   { name: '위스키', ratio: 1,   unit: '잔', glass: '잔',   accent: '#d97706', glow: 'rgba(217, 119, 6, 0.35)' },
+      makgeolli: { name: '막걸리', ratio: 5,   unit: '병', glass: '사발', accent: '#94a3b8', glow: 'rgba(148, 163, 184, 0.3)' },
+      etc:       { name: '하이볼', ratio: 1,   unit: '잔', glass: '잔',   accent: '#06b6d4', glow: 'rgba(6, 182, 212, 0.35)' }
     };
 
-    // 로컬 스토리지 데이터 로드
-    let config = JSON.parse(localStorage.getItem('oneBottleConfig_v2')) || {
-      isLocked: false,
-      selected: ['soju', 'beer'],
+    let appConfig = JSON.parse(localStorage.getItem('obConfig_v3')) || {
+      isSet: false,
+      activeKeys: ['soju'],
       targets: {
         soju: { mode: 'bottle', count: 1, totalGlasses: 8 },
-        beer: { mode: 'bottle', count: 2, totalGlasses: 3 },
         wine: { mode: 'bottle', count: 1, totalGlasses: 5 },
+        beer: { mode: 'bottle', count: 2, totalGlasses: 3 },
         whiskey: { mode: 'glass', count: 3, totalGlasses: 3 },
         makgeolli: { mode: 'bottle', count: 1, totalGlasses: 5 },
         etc: { mode: 'glass', count: 2, totalGlasses: 2 }
       }
     };
 
-    let session = JSON.parse(localStorage.getItem('oneBottleSession_v2')) || {
-      activeTab: 'soju',
-      records: {}, // { soju: 0, beer: 0 }
-      extras: {},  // { soju: 0 }
+    let appSession = JSON.parse(localStorage.getItem('obSession_v3')) || {
+      currentTab: 'soju',
+      intake: {},
+      overtake: {},
       water: 0,
-      timestamp: Date.now()
+      timeMark: Date.now()
     };
 
-    let videoStream = null;
+    let streamRef = null;
 
-    function init() {
-      // 날짜 세팅
+    function initApp() {
       const now = new Date();
-      document.getElementById('session-date').innerText = 
+      document.getElementById('header-date').innerText = 
         `${now.getFullYear()}. ${String(now.getMonth()+1).padStart(2,'0')}. ${String(now.getDate()).padStart(2,'0')}`;
 
-      // 6시간 초과 세션 리셋
-      if (Date.now() - session.timestamp > 6 * 60 * 60 * 1000) {
-        resetSession(false);
+      if (Date.now() - appSession.timeMark > 6 * 3600 * 1000) {
+        requestReset(false);
       }
 
-      // 첫 사용자 강제 온보딩
-      if (!config.isLocked || !config.selected || config.selected.length === 0) {
-        openConfigModal();
+      if (!appConfig.isSet || !appConfig.activeKeys || appConfig.activeKeys.length === 0) {
+        openSettings();
       } else {
-        if (!config.selected.includes(session.activeTab)) {
-          session.activeTab = config.selected[0];
+        if (!appConfig.activeKeys.includes(appSession.currentTab)) {
+          appSession.currentTab = appConfig.activeKeys[0];
         }
-        renderTabs();
-        renderGrid();
-        updateDashboard();
+        syncThemeColor();
+        renderTabCapsules();
+        renderGlassGrid();
+        updateMainInterface();
       }
     }
 
-    // 통합 주량 진척도 계산 (%)
-    function getCombinedProgress() {
-      let sum = 0;
-      for (const key of config.selected) {
-        const consumed = (session.records[key] || 0) + (session.extras[key] || 0);
-        const target = config.targets[key].totalGlasses;
-        sum += (consumed / target);
-      }
-      return sum;
+    function syncThemeColor() {
+      const activeMeta = BEV_CATALOG[appSession.currentTab] || BEV_CATALOG.soju;
+      document.documentElement.style.setProperty('--theme-accent', activeMeta.accent);
+      document.documentElement.style.setProperty('--theme-glow', activeMeta.glow);
     }
 
-    function updateDashboard() {
-      const progress = getCombinedProgress();
-      const percent = Math.round(progress * 100);
+    function calculateTotalProgress() {
+      let quotaRatio = 0;
+      for (const key of appConfig.activeKeys) {
+        const consumed = (appSession.intake[key] || 0) + (appSession.overtake[key] || 0);
+        const limit = appConfig.targets[key].totalGlasses;
+        quotaRatio += (consumed / limit);
+      }
+      return quotaRatio;
+    }
 
-      // SVG 액체 차오름 계산 (최대 200px 높이)
-      const liquid = document.getElementById('bottle-liquid');
-      const fillHeight = Math.min(progress, 1.0) * 196;
-      liquid.setAttribute('y', 232 - fillHeight);
-      liquid.setAttribute('height', fillHeight);
+    function updateMainInterface() {
+      syncThemeColor();
+      const progress = calculateTotalProgress();
+      const pct = Math.round(progress * 100);
 
-      // 텍스트 업데이트
-      const percentEl = document.getElementById('total-percent-text');
-      percentEl.innerText = `${percent}%`;
-      percentEl.style.color = percent >= 100 ? 'var(--danger)' : 'var(--soju-green)';
+      const curKey = appSession.currentTab;
+      const meta = BEV_CATALOG[curKey];
+      const target = appConfig.targets[curKey];
+      const consumed = appSession.intake[curKey] || 0;
+      const extra = appSession.overtake[curKey] || 0;
 
-      const curKey = session.activeTab;
-      const meta = BEVERAGE_MASTER[curKey];
-      const curTarget = config.targets[curKey];
-      const consumed = session.records[curKey] || 0;
-      const extra = session.extras[curKey] || 0;
+      // 상단 멀티 보틀 쇼케이스 렌더링
+      renderMultiBottles(curKey, target, consumed);
+
+      const pctEl = document.getElementById('status-percent');
+      pctEl.innerText = `${pct}%`;
+      pctEl.style.color = pct >= 100 ? 'var(--danger)' : 'var(--theme-accent)';
 
       let bottleStr = '';
-      if (curTarget.mode === 'bottle') {
-        const bCount = (consumed / meta.ratio).toFixed(1).replace('.0','');
-        bottleStr = ` (${bCount} / ${curTarget.count}병)`;
+      if (target.mode === 'bottle') {
+        const curBottle = (consumed / meta.ratio).toFixed(1).replace('.0','');
+        bottleStr = ` (${curBottle} / ${target.count}병)`;
       }
+      document.getElementById('status-desc').innerText = 
+        `${meta.name} ${consumed + extra} / ${target.totalGlasses}${meta.glass}${bottleStr}`;
 
-      document.getElementById('status-detail-text').innerText = 
-        `${meta.name}: ${consumed + extra} / ${curTarget.totalGlasses}${meta.glassName}${bottleStr}`;
-
-      // 앰버 알림 (잔여 1잔 또는 85% 도달 시)
       const amber = document.getElementById('amber-banner');
-      const remain = curTarget.totalGlasses - consumed;
-      if (progress < 1.0 && (remain === 1 || percent >= 85)) {
+      const remain = target.totalGlasses - consumed;
+      if (progress < 1.0 && (remain === 1 || pct >= 85)) {
         amber.style.display = 'block';
       } else {
         amber.style.display = 'none';
       }
 
-      document.getElementById('water-badge').innerText = session.water;
-      localStorage.setItem('oneBottleSession_v2', JSON.stringify(session));
+      document.getElementById('h2o-badge').innerText = appSession.water;
+      localStorage.setItem('obSession_v3', JSON.stringify(appSession));
     }
 
-    function renderTabs() {
-      const container = document.getElementById('tabs-container');
-      container.innerHTML = '';
+    function renderMultiBottles(key, target, totalConsumed) {
+      const rack = document.getElementById('bottles-rack');
+      rack.innerHTML = '';
 
-      config.selected.forEach(key => {
-        const item = BEVERAGE_MASTER[key];
-        const btn = document.createElement('div');
-        btn.className = `tab-item ${session.activeTab === key ? 'active' : ''}`;
-        btn.innerHTML = `${item.icon} <span>${item.name}</span>`;
-        btn.onclick = () => {
-          session.activeTab = key;
-          renderTabs();
-          renderGrid();
-          updateDashboard();
+      const meta = BEV_CATALOG[key];
+      const numBottles = target.mode === 'bottle' ? target.count : Math.max(1, Math.ceil(target.totalGlasses / meta.ratio));
+      const glassesPerBottle = meta.ratio;
+
+      for (let i = 0; i < numBottles; i++) {
+        const bottleStart = i * glassesPerBottle;
+        const bottleEnd = (i + 1) * glassesPerBottle;
+        let bottleFillFraction = 0;
+
+        if (totalConsumed >= bottleEnd) {
+          bottleFillFraction = 1.0;
+        } else if (totalConsumed <= bottleStart) {
+          bottleFillFraction = 0;
+        } else {
+          bottleFillFraction = (totalConsumed - bottleStart) / glassesPerBottle;
+        }
+
+        const unit = document.createElement('div');
+        unit.className = 'bottle-unit';
+        unit.innerHTML = renderBottleSvgDispatcher(key, `b-${i}`, bottleFillFraction);
+        rack.appendChild(unit);
+      }
+    }
+
+    function renderTabCapsules() {
+      const bar = document.getElementById('tabs-bar');
+      bar.innerHTML = '';
+
+      appConfig.activeKeys.forEach(k => {
+        const item = BEV_CATALOG[k];
+        const tab = document.createElement('div');
+        tab.className = `capsule-tab ${appSession.currentTab === k ? 'active' : ''}`;
+        tab.innerHTML = `<span>${item.name}</span>`;
+        tab.onclick = () => {
+          appSession.currentTab = k;
+          renderTabCapsules();
+          renderGlassGrid();
+          updateMainInterface();
         };
-        container.appendChild(btn);
+        bar.appendChild(tab);
       });
     }
 
-    function renderGrid() {
-      const grid = document.getElementById('grid-container');
+    function renderGlassGrid() {
+      const grid = document.getElementById('glasses-grid');
       grid.innerHTML = '';
 
-      const key = session.activeTab;
-      const meta = BEVERAGE_MASTER[key];
-      const total = config.targets[key].totalGlasses;
-      const consumed = session.records[key] || 0;
-      const extra = session.extras[key] || 0;
+      const key = appSession.currentTab;
+      const meta = BEV_CATALOG[key];
+      const limit = appConfig.targets[key].totalGlasses;
+      const consumed = appSession.intake[key] || 0;
+      const extra = appSession.overtake[key] || 0;
 
-      // 주량 기본 잔 생성
-      for (let i = 1; i <= total; i++) {
-        const box = document.createElement('div');
+      for (let i = 1; i <= limit; i++) {
+        const tile = document.createElement('div');
         const isFilled = i <= consumed;
-        box.className = `glass-box ${isFilled ? 'filled' : ''}`;
-        box.innerHTML = `
-          <div class="icon-area">${meta.icon}</div>
-          <div class="num-tag">${i}${meta.glassName}</div>
+        tile.className = `glass-tile ${isFilled ? 'filled' : ''}`;
+        tile.innerHTML = `
+          <div class="tile-svg-box">${getGlassSvgByBeverage(key, isFilled)}</div>
+          <div class="tile-label">${i}${meta.glass}</div>
         `;
-        box.onclick = () => handleGlassTap(i);
-        grid.appendChild(box);
+        tile.onclick = () => onGlassTap(i);
+        grid.appendChild(tile);
       }
 
-      // 주량 완충 시 초과 잔 [+] 버튼 생성
-      if (consumed >= total) {
-        const extraBtn = document.createElement('div');
-        extraBtn.className = 'glass-box extra-btn';
-        extraBtn.innerHTML = `
-          <div class="icon-area">+</div>
-          <div class="num-tag">초과 ${extra}잔</div>
+      if (consumed >= limit) {
+        const extraTile = document.createElement('div');
+        extraTile.className = 'glass-tile tile-extra';
+        extraTile.innerHTML = `
+          <div style="font-size:1.6rem; color:var(--danger); font-weight:800; line-height:1;">+</div>
+          <div class="tile-label">초과 ${extra}잔</div>
         `;
-        extraBtn.onclick = () => handleExtraGlass();
-        grid.appendChild(extraBtn);
+        extraTile.onclick = () => onExtraGlassTap();
+        grid.appendChild(extraTile);
       }
     }
 
-    function handleGlassTap(index) {
-      const key = session.activeTab;
-      const current = session.records[key] || 0;
+    function onGlassTap(index) {
+      const key = appSession.currentTab;
+      const current = appSession.intake[key] || 0;
 
       if (index === current) {
-        // 채워진 마지막 잔 탭 시 취소(-1)
-        session.records[key]--;
+        appSession.intake[key]--;
       } else {
-        session.records[key] = index;
+        appSession.intake[key] = index;
       }
-      renderGrid();
-      updateDashboard();
+      renderGlassGrid();
+      updateMainInterface();
 
-      // 주량 도달 시 진동 (iOS/안드로이드 지원 기기)
-      if (getCombinedProgress() >= 1.0) {
-        if ('vibrate' in navigator) navigator.vibrate([100, 50, 100]);
+      if (calculateTotalProgress() >= 1.0 && 'vibrate' in navigator) {
+        navigator.vibrate([100, 60, 100]);
       }
     }
 
-    function handleExtraGlass() {
-      const key = session.activeTab;
-      session.extras[key] = (session.extras[key] || 0) + 1;
-      renderGrid();
-      updateDashboard();
-      triggerRealityCheck();
+    function onExtraGlassTap() {
+      const key = appSession.currentTab;
+      appSession.overtake[key] = (appSession.overtake[key] || 0) + 1;
+      renderGlassGrid();
+      updateMainInterface();
+      triggerRealityMirror();
     }
 
-    function addWater() {
-      session.water = (session.water || 0) + 1;
-      updateDashboard();
-      if ('vibrate' in navigator) navigator.vibrate(40);
+    function drinkWater() {
+      appSession.water = (appSession.water || 0) + 1;
+      updateMainInterface();
+      if ('vibrate' in navigator) navigator.vibrate(35);
     }
 
-    // 전면 카메라 거울치료 WebRTC
-    async function triggerRealityCheck() {
+    async function triggerRealityMirror() {
       const modal = document.getElementById('mirror-modal');
-      const video = document.getElementById('camera-video');
+      const video = document.getElementById('camera-view');
       modal.style.display = 'flex';
 
       try {
-        videoStream = await navigator.mediaDevices.getUserMedia({
+        streamRef = await navigator.mediaDevices.getUserMedia({
           video: { facingMode: 'user' }
         });
-        video.srcObject = videoStream;
+        video.srcObject = streamRef;
       } catch (e) {
-        console.warn('전면 카메라 권한 없음 또는 미지원', e);
+        console.warn('전면 카메라 접근 불가:', e);
       }
     }
 
-    function dismissMirror() {
+    function closeMirror() {
       document.getElementById('mirror-modal').style.display = 'none';
-      if (videoStream) {
-        videoStream.getTracks().forEach(t => t.stop());
-        videoStream = null;
+      if (streamRef) {
+        streamRef.getTracks().forEach(t => t.stop());
+        streamRef = null;
       }
     }
 
-    // 주량 설정 온보딩 렌더링
-    function openConfigModal() {
-      const list = document.getElementById('bev-selection-list');
-      list.innerHTML = '';
+    function openSettings() {
+      const container = document.getElementById('settings-card-list');
+      container.innerHTML = '';
 
-      for (const [key, meta] of Object.entries(BEVERAGE_MASTER)) {
-        const isSelected = config.selected.includes(key);
-        const target = config.targets[key];
+      for (const [key, meta] of Object.entries(BEV_CATALOG)) {
+        const isChecked = appConfig.activeKeys.includes(key);
+        const tgt = appConfig.targets[key];
 
         const card = document.createElement('div');
-        card.className = `bev-config-card ${isSelected ? 'active' : ''}`;
-        card.id = `bev-card-${key}`;
+        card.className = `bev-item-card ${isChecked ? 'selected' : ''}`;
+        card.id = `bev-item-${key}`;
 
         card.innerHTML = `
-          <div class="bev-card-header">
-            <label class="bev-title-box">
-              <input type="checkbox" id="check-${key}" ${isSelected ? 'checked' : ''} onchange="toggleBevSelect('${key}')" style="width:18px; height:18px;">
-              <span>${meta.icon} ${meta.name}</span>
+          <div class="card-topline">
+            <label class="bev-check-label">
+              <input type="checkbox" id="chk-${key}" ${isChecked ? 'checked' : ''} onchange="toggleBev('${key}')" style="width:18px; height:18px; accent-color:var(--accent-soju);">
+              <span>${meta.name}</span>
             </label>
             ${meta.ratio > 1 ? `
-              <div class="unit-toggle">
-                <button class="unit-btn ${target.mode === 'bottle' ? 'selected' : ''}" onclick="setBevUnit('${key}', 'bottle')">${meta.unitName}</button>
-                <button class="unit-btn ${target.mode === 'glass' ? 'selected' : ''}" onclick="setBevUnit('${key}', 'glass')">${meta.glassName}</button>
+              <div class="unit-switch">
+                <button class="unit-opt ${tgt.mode === 'bottle' ? 'on' : ''}" onclick="changeUnit('${key}', 'bottle')">${meta.unit}</button>
+                <button class="unit-opt ${tgt.mode === 'glass' ? 'on' : ''}" onclick="changeUnit('${key}', 'glass')">${meta.glass}</button>
               </div>
-            ` : `<span style="font-size:0.75rem; color:var(--muted);">잔 전용</span>`}
+            ` : `<span style="font-size:0.75rem; color:var(--text-dim);">잔 전용</span>`}
           </div>
 
-          <div class="stepper-row" id="stepper-row-${key}">
-            <span class="calc-info" id="calc-info-${key}">계산 중...</span>
-            <div class="step-control">
-              <button onclick="changeCount('${key}', -1)">-</button>
-              <strong id="count-val-${key}" style="min-width:24px; text-align:center;">${target.count}</strong>
-              <button onclick="changeCount('${key}', 1)">+</button>
+          <div class="card-bottomline">
+            <span class="formula-txt" id="formula-${key}">계산 중...</span>
+            <div class="stepper-box">
+              <button onclick="stepTarget('${key}', -1)">-</button>
+              <strong id="count-disp-${key}">${tgt.count}</strong>
+              <button onclick="stepTarget('${key}', 1)">+</button>
             </div>
           </div>
         `;
-        list.appendChild(card);
-        updateCardCalcInfo(key);
+        container.appendChild(card);
+        updateCardFormula(key);
       }
 
-      document.getElementById('config-modal').style.display = 'flex';
+      document.getElementById('settings-modal').style.display = 'flex';
     }
 
-    function toggleBevSelect(key) {
-      const chk = document.getElementById(`check-${key}`);
-      const card = document.getElementById(`bev-card-${key}`);
+    function toggleBev(key) {
+      const chk = document.getElementById(`chk-${key}`);
+      const card = document.getElementById(`bev-item-${key}`);
       if (chk.checked) {
-        if (!config.selected.includes(key)) config.selected.push(key);
-        card.classList.add('active');
+        if (!appConfig.activeKeys.includes(key)) appConfig.activeKeys.push(key);
+        card.classList.add('selected');
       } else {
-        config.selected = config.selected.filter(k => k !== key);
-        card.classList.remove('active');
+        appConfig.activeKeys = appConfig.activeKeys.filter(k => k !== key);
+        card.classList.remove('selected');
       }
     }
 
-    function setBevUnit(key, unit) {
-      config.targets[key].mode = unit;
-      const meta = BEVERAGE_MASTER[key];
-      // 단위 전환 시 기본값 보정
-      if (unit === 'bottle') {
-        config.targets[key].count = Math.max(1, Math.round(config.targets[key].totalGlasses / meta.ratio)) || 1;
+    function changeUnit(key, mode) {
+      appConfig.targets[key].mode = mode;
+      const meta = BEV_CATALOG[key];
+      if (mode === 'bottle') {
+        appConfig.targets[key].count = Math.max(1, Math.round(appConfig.targets[key].totalGlasses / meta.ratio)) || 1;
       } else {
-        config.targets[key].count = config.targets[key].totalGlasses;
+        appConfig.targets[key].count = appConfig.targets[key].totalGlasses;
       }
-      openConfigModal(); // 재렌더링
+      openSettings();
     }
 
-    function changeCount(key, delta) {
-      const cur = config.targets[key].count + delta;
-      if (cur < 1 || cur > 30) return;
-      config.targets[key].count = cur;
-      document.getElementById(`count-val-${key}`).innerText = cur;
-      updateCardCalcInfo(key);
+    function stepTarget(key, delta) {
+      const current = appConfig.targets[key].count + delta;
+      if (current < 1 || current > 20) return;
+      appConfig.targets[key].count = current;
+      document.getElementById(`count-disp-${key}`).innerText = current;
+      updateCardFormula(key);
     }
 
-    function updateCardCalcInfo(key) {
-      const meta = BEVERAGE_MASTER[key];
-      const target = config.targets[key];
-      if (target.mode === 'bottle') {
-        target.totalGlasses = Math.round(target.count * meta.ratio);
-        document.getElementById(`calc-info-${key}`).innerText = 
-          `${target.count}${meta.unitName} = 총 ${target.totalGlasses}${meta.glassName}`;
+    function updateCardFormula(key) {
+      const meta = BEV_CATALOG[key];
+      const tgt = appConfig.targets[key];
+      if (tgt.mode === 'bottle') {
+        tgt.totalGlasses = Math.round(tgt.count * meta.ratio);
+        document.getElementById(`formula-${key}`).innerText = 
+          `${tgt.count}${meta.unit} = 총 ${tgt.totalGlasses}${meta.glass}`;
       } else {
-        target.totalGlasses = target.count;
-        const bVal = (target.count / meta.ratio).toFixed(1).replace('.0','');
-        document.getElementById(`calc-info-${key}`).innerText = 
-          meta.ratio > 1 ? `총 ${target.totalGlasses}${meta.glassName} (약 ${bVal}${meta.unitName})` : `총 ${target.totalGlasses}${meta.glassName}`;
+        tgt.totalGlasses = tgt.count;
+        const bVal = (tgt.count / meta.ratio).toFixed(1).replace('.0','');
+        document.getElementById(`formula-${key}`).innerText = 
+          meta.ratio > 1 ? `총 ${tgt.totalGlasses}${meta.glass} (약 ${bVal}${meta.unit})` : `총 ${tgt.totalGlasses}${meta.glass}`;
       }
     }
 
-    function saveConfiguration() {
-      if (config.selected.length === 0) {
-        alert('최소 하나 이상의 마실 주종을 선택해주세요!');
+    function commitSettings() {
+      if (appConfig.activeKeys.length === 0) {
+        alert('최소 하나의 주종을 선택해 주세요.');
         return;
       }
-      config.isLocked = true;
-      localStorage.setItem('oneBottleConfig_v2', JSON.stringify(config));
-      document.getElementById('config-modal').style.display = 'none';
+      appConfig.isSet = true;
+      localStorage.setItem('obConfig_v3', JSON.stringify(appConfig));
+      document.getElementById('settings-modal').style.display = 'none';
 
-      if (!config.selected.includes(session.activeTab)) {
-        session.activeTab = config.selected[0];
+      if (!appConfig.activeKeys.includes(appSession.currentTab)) {
+        appSession.currentTab = appConfig.activeKeys[0];
       }
-      renderTabs();
-      renderGrid();
-      updateDashboard();
+      renderTabCapsules();
+      renderGlassGrid();
+      updateMainInterface();
     }
 
-    function resetSession(needConfirm = true) {
-      if (!needConfirm || confirm('오늘의 1차 기록을 초기화하시겠습니까?')) {
-        session.records = {};
-        session.extras = {};
-        session.water = 0;
-        session.timestamp = Date.now();
-        localStorage.setItem('oneBottleSession_v2', JSON.stringify(session));
-        renderGrid();
-        updateDashboard();
+    function requestReset(ask = true) {
+      if (!ask || confirm('오늘의 1차 기록을 초기화하시겠습니까?')) {
+        appSession.intake = {};
+        appSession.overtake = {};
+        appSession.water = 0;
+        appSession.timeMark = Date.now();
+        localStorage.setItem('obSession_v3', JSON.stringify(appSession));
+        renderGlassGrid();
+        updateMainInterface();
       }
     }
 
-    init();
+    initApp();
   </script>
 </body>
 </html>
